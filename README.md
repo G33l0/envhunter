@@ -2,7 +2,7 @@
 
 > **.env Exposure & Secrets Recon Framework**  
 > **Author:** g33l0 | **Telegram:** @x0x0h33l0  
-> **Version:** 3.0
+> **Version:** 3.1
 
 ---
 
