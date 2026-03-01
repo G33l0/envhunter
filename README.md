@@ -1,4 +1,4 @@
-# 🔍 EnvHunter v3.0
+# 🔍 EnvHunter v3.1
 
 > **.env Exposure & Secrets Recon Framework**  
 > **Author:** g33l0 | **Telegram:** @x0x0h33l0  
@@ -23,7 +23,7 @@
 
 **EnvHunter** is a professional `.env` file exposure scanner for security teams to proactively audit their entire web infrastructure before attackers can exploit accidentally exposed configuration files. These files commonly contain database credentials, API keys, SMTP settings, cloud tokens, payment secrets, and other high-value data.
 
-**v3.0 brings:** Shodan/Censys asset discovery, crt.sh + HackerTarget + AlienVault OTX subdomain enumeration, Telegram alerting with new-findings-only deduplication, and a full scheduled/cron scan engine.
+**v3.1 brings:** Shodan/Censys asset discovery, crt.sh + HackerTarget + AlienVault OTX subdomain enumeration, Telegram alerting with new-findings-only deduplication, and a full scheduled/cron scan engine.
 
 ---
 
@@ -61,8 +61,8 @@
 
 ```bash
 # 1. Clone
-git clone https://github.com/g33l0/EnvHunter.git
-cd EnvHunter
+git clone https://github.com/g33l0/envhunter.git
+cd envhunter
 
 # 2. Install dependencies
 pip install -r requirements.txt
