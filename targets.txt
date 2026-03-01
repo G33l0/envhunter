@@ -1,0 +1,9 @@
+# EnvHunter - Sample Targets File
+# Add one URL per line. Lines starting with # are ignored.
+# Both http:// and https:// are supported. If no scheme is given, https:// is assumed.
+
+# Example targets (replace with your own):
+# https://example.com
+# https://api.example.com
+# https://staging.example.com
+# https://app.example.com
