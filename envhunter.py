@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-╔═══════════════════════════════════════════════════════════╗
-║                                                           ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗  ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║  ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║  ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║  ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║  ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝  ║
-║                                                           ║
-║       .env Exposure & Secrets Recon Framework  v4.0       ║
-║               Author : g33l0  |  Telegram : @x0x0h33l0    ║
-╚═══════════════════════════════════════════════════════════╝
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗   ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║   ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║   ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║   ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
+║                                                            ║
+║       .env Exposure & Secrets Recon Framework  v4.1        ║
+║          Author : g33l0  |  Telegram : @x0x0h33l0          ║
+╚════════════════════════════════════════════════════════════╝
 """
 
 # ── stdlib ────────────────────────────────────────────────────────────────────
@@ -66,24 +66,24 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.0"
+VERSION   = "4.1"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
 
 BANNER = """[bold cyan]
-╔═══════════════════════════════════════════════════════════╗
-║                                                           ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗  ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║  ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║  ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║  ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║  ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝  ║
-║                                                           ║
-║      [bold white]  .env Exposure & Secrets Recon Framework  v4.0[/bold white][bold cyan]      ║
-║         [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]        ║
-╚═══════════════════════════════════════════════════════════╝[/bold cyan]"""
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗   ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║   ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║   ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║   ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
+║                                                            ║
+║      [bold white]  .env Exposure & Secrets Recon Framework  v4.1[/bold white][bold cyan]       ║
+║       [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]           ║
+╚════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
 # ─── SCAN MODULES ─────────────────────────────────────────────────────────────
 # Each module is a named group of paths. The engine checks ALL enabled modules.
@@ -311,19 +311,20 @@ SCAN_MODULES: dict = {
     },
 
     # ── NEW: WordPress Specific ───────────────────────────────────────────────
+    # Note: wp-login.php removed — it is a normal page, not an exposure.
+    # We target paths that genuinely leak data when publicly accessible.
     "wordpress": {
         "enabled": True,
         "label":   "WordPress",
         "paths": [
-            "/wp-json/wp/v2/users",
-            "/wp-json/",
-            "/wp-content/debug.log",
-            "/wp-content/uploads/",
-            "/xmlrpc.php",
-            "/?author=1",
+            "/wp-json/wp/v2/users",     # user enumeration via REST API
+            "/wp-content/debug.log",    # debug log — may contain DB errors, passwords
+            "/wp-content/uploads/.htaccess",  # htaccess may be missing, exposing uploads
+            "/xmlrpc.php",              # XML-RPC — brute force / info disclosure
+            "/?author=1",               # legacy author enumeration
             "/?author=2",
-            "/wp-includes/",
-            "/wp-config-sample.php",
+            "/wp-config-sample.php",    # config sample — may contain real credentials
+            "/wp-admin/install.php",    # re-installation page — should be inaccessible post-install
         ],
     },
 }
@@ -355,7 +356,7 @@ SENSITIVE_PATTERNS = {
     "Redis / Cache":        r'(?i)(redis_url|redis_pass|redis_host|memcached_pass)',
     "Webhook Secrets":      r'(?i)(webhook_secret|slack_token|discord_token|telegram_bot)',
     "General Secrets":      r'(?i)(secret|token|key|credential|passwd)[\s]*[=:]+[\s]*[^\s]{6,}',
-    # ── New patterns (v4.0) ───────────────────────────────────────────────────
+    # ── New patterns (v1) ───────────────────────────────────────────────────
     "Docker / DevOps":      r'(?i)(docker_pass|registry_pass|ci_token|deploy_key|ansible_pass|vault_token|terraform)',
     "SSH / Private Keys":   r'(?i)(-----BEGIN|RSA PRIVATE|OPENSSH PRIVATE|DSA PRIVATE|EC PRIVATE|ssh-rsa|ssh-ed25519)',
     "Spring Boot Actuator": r'(?i)(spring\.datasource|spring\.security|management\.endpoints)',
@@ -371,26 +372,160 @@ SENSITIVE_PATTERNS = {
 # the resource we expect (not a 200 OK catch-all / soft 404).
 
 MODULE_SIGNATURES: dict = {
-    "phpmyadmin":    [r'(?i)(phpmyadmin|pma_|pmahomme|phpMyAdmin)', r'(?i)(mysql|mariadb|database)'],
-    "admin_panels":  [r'(?i)(login|username|password|admin|administrator|sign.?in)'],
-    "php_info":      [r'(?i)(phpinfo|PHP Version|php\.ini|Configuration|extension)'],
-    "server_status": [r'(?i)(server.status|requests.currently|uptime|connections|worker)'],
-    "config_files":  [r'(?i)(password|database|secret|key|host|username|token)'],
-    "backup_files":  [r'(?i)(INSERT INTO|CREATE TABLE|mysqldump|Database:|Host:)'],
-    "git_exposure":  [r'(?i)(repositoryformatversion|filemode|bare|ref:|HEAD|branch)'],
-    "log_files":     [r'(?i)(ERROR|WARNING|NOTICE|Stack trace|exception|Traceback|\[error\])'],
-    "ssh_keys":      [r'(?i)(-----BEGIN|RSA PRIVATE|OPENSSH|ssh-rsa|ssh-ed25519)'],
-    "package_files": [r'(?i)("name"|"version"|"dependencies"|"require"|packages)'],
-    "devops_files":  [r'(?i)(version:|services:|image:|FROM |RUN |ENV |COPY |ARG )'],
-    "api_exposure":  [r'(?i)(swagger|openapi|paths:|definitions:|"info":|"paths":)'],
-    "wordpress":     [r'(?i)(wp-|wordpress|wp_|woocommerce|wp-content)'],
-    "env_files":     [],  # uses existing _looks_like_env() logic
-}
+    # ═══ SIGNATURE DESIGN RULES ═══════════════════════════════════════════════
+    # 1. OR logic: ANY single matching signature = confirmed exposure
+    # 2. Each signature must be SPECIFIC to the genuine resource
+    #    — it must NOT match normal web pages, login forms, or error pages
+    # 3. Evidence extracted = the matched line from response (full context)
+    # 4. When in doubt, be MORE strict: false negatives are better than
+    #    false positives (we alert on what is real, not what might be real)
+    # ══════════════════════════════════════════════════════════════════════════
 
+    # ── phpMyAdmin: only fire on pages that ARE phpMyAdmin ───────────────────
+    # Generic MySQL login pages (Adminer, custom DB tools) need their own paths
+    "phpmyadmin": [
+        r'(?i)(id="pma_|class="pma|pmahomme|PMA_VERSION|pma_navigation)',
+        r'(?i)<title>\s*phpMyAdmin\s*</title>',
+        r'(?i)(pma_token|pma_lang|pma_charset|pmaAbsoluteUri)',
+    ],
+
+    # ── Admin panels: specific hosting/framework control panels ONLY ─────────
+    # Login forms are NOT an exposure — every site has a login page.
+    # We only flag UNPROTECTED admin interfaces that expose data directly.
+    # flask-admin/django-admin on a login page is NOT a finding — we need
+    # the actual admin content (list views, model data) to be exposed.
+    "admin_panels": [
+        r'(?i)(cpanel|whm_login|plesk\s+login|directadmin)',
+        r'(?i)<title>[^<]*(cpanel|webmin|plesk|directadmin|WHM)[^<]*</title>',
+        r'(?i)(webmin\.cgi|webmin/index\.cgi)',
+        r'(?i)(Joomla\s+Administration\s+Login)',
+        # Django admin: only fire on the actual admin list/change pages, NOT login
+        r'(?i)<title>[^<]*\|\s*Django\s+site\s+admin[^<]*</title>',
+        # Flask-Admin: only fire on pages with the actual admin panel nav
+        r'(?i)class="flask-admin\b',
+    ],
+
+    # ── PHP info: phpinfo() table structure — unique, cannot appear in HTML ──
+    # Must match the specific two-column info table phpinfo() generates.
+    # class="e" alone is far too broad (any HTML table can have class="e").
+    "php_info": [
+        r'(?i)PHP\s+Version\s*</td>',
+        r'(?i)(Configure\s+Command\s*</td>|Build\s+Date\s*</td>)',
+        r'(?i)Loaded\s+Configuration\s+File\s*</td>',
+        r'(?i)<title>\s*phpinfo\s*\(\s*\)',
+    ],
+
+    # ── Server status: Apache/Nginx/Spring specific output format ────────────
+    "server_status": [
+        r'(?i)(Apache\s+Server\s+Status|Requests\s+currently\s+being\s+processed)',
+        r'(?i)(Active\s+connections:\s*\d|server\s+accepts\s+handled\s+requests)',
+        r'(?i)"status"\s*:\s*"(UP|DOWN)"\s*,\s*"(components|groups|details)"',
+        r'(?i)("diskSpace"\s*:\s*\{|"db"\s*:\s*\{.*"status")',
+    ],
+
+    # ── Config files: require actual secret assignment syntax ────────────────
+    # Words like 'key', 'host', 'token' on a webpage are NOT config findings
+    "config_files": [
+        r'(?im)^(DB_PASSWORD|DB_PASS|DATABASE_PASSWORD|MYSQL_PASSWORD)\s*=\s*\S',
+        r'(?im)^(APP_KEY|SECRET_KEY|API_KEY|JWT_SECRET)\s*=\s*\S',
+        r"(?i)define\s*\(\s*['\"]DB_PASSWORD['\"]",
+        r'(?i)["\']password["\']\s*:\s*["\'][^"\']{4,}["\']',
+    ],
+
+    # ── Backup files: real SQL dump syntax ───────────────────────────────────
+    "backup_files": [
+        r'(?i)INSERT\s+INTO\s+`?\w+`?\s*VALUES\s*\(',
+        r'(?i)CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?`?\w',
+        r'(?i)(mysqldump\s+\d+\.\d+|-- Dump completed on)',
+    ],
+
+    # ── Git exposure: OR logic, each pattern matches ONE specific git file ────
+    # Fixes the globant.com false positive where HTML <head> matched (?i)HEAD
+    # These patterns CANNOT appear in normal HTML pages:
+    #   - A 40-char hex string followed by "refs/" is exclusively packed-refs
+    #   - "[core]" on its own line is exclusively .git/config
+    #   - "ref: refs/heads/" is exclusively .git/HEAD content
+    "git_exposure": [
+        r'(?m)^[0-9a-f]{40}\s+refs/',          # packed-refs: SHA40 + ref path
+        r'(?m)^\[core\]\s*$',                   # .git/config: [core] section header
+        r'(?m)^ref:\s*refs/heads/\S',           # .git/HEAD: ref pointer format
+        r'(?m)^repositoryformatversion\s*=\s*\d',  # .git/config version field
+    ],
+
+    # ── Log files: require actual log line format with timestamp/level ───────
+    "log_files": [
+        r'\[\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}',
+        r'(?i)(Stack\s+trace:|Traceback\s+\(most\s+recent\s+call)',
+        r'(?i)SQLSTATE\[',
+        r'(?i)Illuminate\\(Database|Http|Auth)',
+    ],
+
+    # ── SSH keys: BEGIN header is unmistakable and cannot appear in HTML ──────
+    "ssh_keys": [
+        r'-----BEGIN\s+(RSA |DSA |EC |OPENSSH )?PRIVATE\s+KEY-----',
+        r'-----BEGIN\s+CERTIFICATE-----',
+    ],
+
+    # ── Package files: require JSON manifest structure ────────────────────────
+    # Split multi-line patterns — literal newlines in r-strings are valid but
+    # must use (?s) or \n explicitly so they work across line boundaries.
+    "package_files": [
+        r'"name"\s*:\s*"[\w@/\-\.]+"\s*,',
+        r'"version"\s*:\s*"\d+\.\d+',
+        r'"dependencies"\s*:\s*\{',
+        r'"require"\s*:\s*\{\s*"php"\s*:',
+    ],
+
+    # ── DevOps files: docker-compose/Dockerfile specific syntax ──────────────
+    "devops_files": [
+        r'(?m)^services:\s*$',
+        r'(?m)^FROM\s+\S+',
+        r'(?m)^(RUN|ENV|COPY|ARG|EXPOSE)\s+\S',
+        r'(?im)(DOCKER_PASSWORD|REGISTRY_TOKEN|CI_TOKEN|VAULT_ADDR)',
+    ],
+
+    # ── API docs: Swagger/OpenAPI JSON document structure ────────────────────
+    # "paths":{} alone matches ANY JSON API response — must require the swagger
+    # or openapi version field that only appears in spec documents.
+    "api_exposure": [
+        r'"swagger"\s*:\s*"[23]\.',
+        r'"openapi"\s*:\s*"[23]\.',
+        r'"swaggerVersion"\s*:\s*"[12]\.',
+        r'(?i)<title>[^<]*swagger\s*ui[^<]*</title>',
+        r'(?i)Swagger\s+UI\s*[-–]',
+    ],
+
+    # ── WordPress: specific data-leaking WP responses ────────────────────────
+    # NOT wp-login.php (that's normal). Only actually-leaking endpoints.
+    "wordpress": [
+        r'"id"\s*:\s*\d+\s*,\s*"name"\s*:\s*"[^"]+"\s*,\s*"url"\s*:',
+        r'(?i)XML-RPC\s+server\s+accepts\s+POST\s+requests\s+only',
+        r'(?i)<methodResponse>',
+        r'(?i)"capabilities"\s*:\s*\{\s*"edit_posts"',
+    ],
+
+    # .env files use _looks_like_env() — no signatures needed here
+    "env_files": [],
+}
 FP_MARKERS = [
-    r'(?i)^#', r'(?i)=\s*$', r'(?i)=\s*null', r'(?i)=\s*false',
-    r'(?i)=\s*your_', r'(?i)=\s*<', r'(?i)=\s*\{', r'(?i)=\s*\[',
-    r'(?i)_example', r'(?i)_placeholder', r'(?i)change.?me', r'(?i)xxx+',
+    r'(?i)^#',                    # comment lines
+    r'(?i)=\s*$',                 # empty value
+    r'(?i)=\s*null\b',            # null value
+    r'(?i)=\s*false\b',           # false value
+    r'(?i)=\s*true\b',            # true value (standalone booleans are not secrets)
+    r'(?i)=\s*your_',             # placeholder: your_key, your_secret etc.
+    r'(?i)=\s*<',                 # placeholder: <value>, <TOKEN>
+    r'(?i)=\s*\{',                # object placeholder
+    r'(?i)=\s*\[',                # array placeholder
+    r'(?i)_example\b',            # example suffix
+    r'(?i)_placeholder\b',        # placeholder suffix
+    r'(?i)change.?me\b',          # change-me placeholder
+    r'(?i)xxx+',                  # xxx placeholder
+    r'(?i)=\s*enter.{0,20}here',  # "enter value here" placeholder
+    r'(?i)=\s*replace.{0,20}this',# "replace this" placeholder
+    r'(?i)=\s*todo\b',            # TODO placeholder
+    r'(?i)=\s*\*+\s*$',          # asterisks only (redacted display)
+    r'(?i)^(login|username|password|user|email)\s*$',  # standalone words (not KEY=val)
 ]
 
 USER_AGENTS: List[str] = [
@@ -956,9 +1091,30 @@ class EnvHunter:
         return t.rstrip("/")
 
     def _looks_like_env(self, text: str) -> bool:
+        # Reject HTML pages immediately
         if re.search(r'<html|<body|<!doctype', text[:500], re.IGNORECASE):
             return False
-        return len(re.findall(r'^[A-Z_][A-Z0-9_]*\s*=', text, re.MULTILINE)) >= 1
+        # Reject JSON responses (APIs, configs served as JSON)
+        stripped = text.strip()
+        if stripped.startswith(('{', '[')):
+            return False
+        # Require at least 2 KEY=VALUE lines where VALUE is non-empty and non-trivial.
+        # A "KEY=" with no value, or "KEY=null", or "KEY=false" is not a secret.
+        # We count only lines that have an actual value after the = sign.
+        real_kv = re.findall(
+            r'^[A-Z_][A-Z0-9_]{2,}\s*=\s*[^\s#\n][^\n]{0,}',
+            text, re.MULTILINE
+        )
+        # Filter out lines that are just placeholders
+        actual = [
+            ln for ln in real_kv
+            if not re.search(
+                r'(?i)(=\s*null\b|=\s*false\b|=\s*true\b|=\s*<|=\s*\{|'
+                r'change.?me|your_|_example|_placeholder|xxx+|=\s*$)',
+                ln
+            )
+        ]
+        return len(actual) >= 2
 
     def _is_fp(self, line: str) -> bool:
         return any(re.search(p, line) for p in FP_MARKERS)
@@ -1004,9 +1160,14 @@ class EnvHunter:
 
             ct = resp.headers.get("Content-Type", "")
             if not self.args.aggressive:
-                bad = ("text/html", "application/json", "image/", "video/", "audio/")
-                if any(b in ct for b in bad):
+                # Only hard-block binary content types — never a .env file
+                binary = ("image/", "video/", "audio/", "application/pdf",
+                          "application/zip", "application/octet-stream",
+                          "font/")
+                if any(b in ct for b in binary):
                     return None
+                # text/html CAN be a .env file on misconfigured servers —
+                # let _looks_like_env() decide, don't block here
 
             try:
                 content = resp.text
@@ -1050,15 +1211,32 @@ class EnvHunter:
     def _fetch_page(self, url: str, module: str) -> Optional[ExposedPage]:
         """
         Fetch a non-.env URL and check if it's genuinely exposed.
-        Uses MODULE_SIGNATURES to confirm the page is real (not a soft 404).
-        Returns ExposedPage if confirmed exposed, None otherwise.
+
+        KEY DESIGN DECISIONS:
+        - Redirects are DISABLED by default. A genuine exposed resource
+          responds 200 directly. If /admin/ redirects to /login.php that
+          means the admin panel is PROTECTED — it requires authentication.
+          Following the redirect would land on a login form which contains
+          "password" and "username" words, causing false positives.
+        - Signatures require ALL patterns in the list to match (AND logic).
+          This prevents single broad words from triggering a finding.
+        - Evidence shown in the report is the matched line from the
+          response, not just the tiny regex token.
         """
+        # Modules where following redirects is valid
+        # (e.g. server status pages sometimes redirect to their canonical path)
+        redirect_ok = {"server_status", "api_exposure", "php_info"}
+
         try:
             resp = self.session.get(
-                url, headers=self._headers(),
-                allow_redirects=True,   # follow redirects for admin panels
+                url,
+                headers=self._headers(),
+                allow_redirects=(module in redirect_ok),
                 timeout=self.args.timeout
             )
+
+            # Only accept direct 200/206 — redirects mean the resource is
+            # protected or moved; 403/401 means it exists but is locked.
             if resp.status_code not in (200, 206):
                 return None
 
@@ -1067,32 +1245,94 @@ class EnvHunter:
             except Exception:
                 content = resp.content.decode("utf-8", errors="replace")
 
-            if not content or len(content) < 20:
+            if not content or len(content) < 50:
                 return None
 
-            # Check against module signatures to reject soft 404s
+            # ── Module-specific content-type guard ────────────────────────────
+            # Raw file modules (git, ssh, backup, package, devops, config)
+            # should NEVER return HTML — if they do it's a soft 404 or CMS page.
+            raw_file_modules = {
+                "git_exposure", "ssh_keys", "backup_files",
+                "package_files", "devops_files", "config_files", "log_files"
+            }
+            if module in raw_file_modules:
+                if re.search(r'<html|<!doctype|<head\b|<body\b', content[:500], re.IGNORECASE):
+                    return None
+
+            # ── Soft 404 detection ─────────────────────────────────────────────
+            # Many sites return HTTP 200 for every non-existent URL
+            # with a custom "Page Not Found" page. Reject these BEFORE
+            # running signature checks to avoid false positives.
+            SOFT_404_PATTERNS = [
+                r'(?i)<title>[^<]*(404|not.?found|page.?not.?found|error)[^<]*</title>',
+                r'(?i)(the page you (are looking for|requested) (could not be found|does not exist))',
+                r'(?i)(404\s*[-–—]\s*(not found|page not found|file not found))',
+                r'(?i)(this page (doesn.t|does not) exist)',
+                r'(?i)(oops[.!]?\s+(something went wrong|page not found|we can.t find))',
+                r'(?i)(no\s+such\s+file\s+or\s+directory)',
+            ]
+            head = content[:3000]
+            for _s404 in SOFT_404_PATTERNS:
+                if re.search(_s404, head):
+                    return None  # Confirmed soft 404 — discard
+
+            # ── Signature validation ───────────────────────────────────────────
+            # OR logic: ANY one signature match = confirmed genuine exposure.
+            # Each signature is specific enough that a single match is conclusive.
             sigs = MODULE_SIGNATURES.get(module, [])
             evidence: List[str] = []
 
             if sigs:
+                search_zone = content[:8000]  # check first 8KB for speed
+                # ── OR logic: ANY one signature match = confirmed exposure ──────
+                # Each signature is specific enough that a single match is conclusive.
+                # Different files in the same module (e.g. .git/HEAD vs .git/config
+                # vs packed-refs) each match different patterns — AND logic would
+                # require ALL to match simultaneously which is impossible for
+                # single-file responses. OR logic is correct here.
+                first_match = None
                 for sig in sigs:
-                    matches = re.findall(sig, content[:5000])
-                    if matches:
-                        # Deduplicate and clean evidence
-                        for m in matches[:3]:
-                            m_str = m if isinstance(m, str) else m[0]
-                            if m_str and m_str not in evidence:
-                                evidence.append(m_str[:80])
-                if not evidence:
-                    return None  # No signature match — likely soft 404
+                    m = re.search(sig, search_zone, re.MULTILINE)
+                    if m:
+                        first_match = m
+                        break
+                if not first_match:
+                    return None  # No signature matched — not a genuine exposure
+                # Extract evidence: full line containing the match (shows real context)
+                # This replaces the old "bare matched word" approach that showed
+                # evidence like "• head" instead of "• ref: refs/heads/main"
+                for sig in sigs:
+                    m = re.search(sig, search_zone, re.MULTILINE)
+                    if not m:
+                        continue
+                    m_pos      = m.start()
+                    line_start = search_zone.rfind('\n', 0, m_pos) + 1
+                    line_end   = search_zone.find('\n', m.end())
+                    if line_end == -1:
+                        line_end = min(m_pos + 200, len(search_zone))
+                    raw_line   = search_zone[line_start:line_end].strip()
+                    # Strip HTML tags for clean display in Telegram/reports
+                    clean_line = re.sub(r'<[^>]+>', ' ', raw_line)
+                    clean_line = re.sub(r'\s+', ' ', clean_line).strip()
+                    if not clean_line:
+                        clean_line = m.group(0)[:80].strip()
+                    if clean_line and clean_line not in evidence:
+                        evidence.append(clean_line[:120])
+                    if len(evidence) >= 4:
+                        break
             else:
-                # No signatures defined — trust HTTP 200 + content length
-                if len(content) < 100:
+                # No signatures defined for this module — trust HTTP 200 only
+                # if the content is substantial (not a redirect/error page)
+                if len(content) < 200:
+                    return None
+                # Additional guard: reject if it looks like an HTML page
+                # when we expected a raw file (backup, key, etc.)
+                if re.search(r'<html|<!doctype', content[:200], re.IGNORECASE):
                     return None
 
-            label      = SCAN_MODULES.get(module, {}).get("label", module)
-            page       = ExposedPage(url, resp.status_code, len(content),
-                                     module, label, evidence)
+            label            = SCAN_MODULES.get(module, {}).get("label", module)
+            page             = ExposedPage(url, resp.status_code, len(content),
+                                           module, label, evidence)
             page.risk_level  = self._page_risk(module)
             page.raw_snippet = content[:500]
             return page
@@ -1142,7 +1382,7 @@ class EnvHunter:
             if self.args.delay:
                 time.sleep(random.uniform(self.args.delay * 0.5, self.args.delay))
 
-        # ── Phase 2: Web exposure scanning (new in v4.0) ───────────────────
+        # ── Phase 2: Web exposure scanning (new in v4.1) ───────────────────
         for mod_key, mod_cfg in SCAN_MODULES.items():
             if mod_key == "env_files":
                 continue  # already handled above
@@ -1201,11 +1441,12 @@ class EnvHunter:
                                 for env in result.exposed_envs:
                                     if env.risk_level == "CRITICAL":
                                         self.stats["critical"] += 1
-                        if result.exposed_pages:
-                            self.stats["pages_found"] += len(result.exposed_pages)
-                            for page in result.exposed_pages:
-                                if page.risk_level == "CRITICAL":
-                                    self.stats["critical"] += 1
+                            # pages_found inside lock — thread safe
+                            if result.exposed_pages:
+                                self.stats["pages_found"] += len(result.exposed_pages)
+                                for page in result.exposed_pages:
+                                    if page.risk_level == "CRITICAL":
+                                        self.stats["critical"] += 1
                     except Exception as e:
                         with self.lock:
                             self.stats["errors"] += 1
@@ -1362,7 +1603,8 @@ class Reporter:
     def save_json(self, path: str):
         data = []
         for r in self.results:
-            if not r.exposed_envs:
+            # Include target if it has ANY finding — env OR page exposure
+            if not r.exposed_envs and not r.exposed_pages:
                 continue
             entry = {
                 "target": r.target, "source": r.source,
@@ -1407,11 +1649,14 @@ class Reporter:
                 f.write("=" * 70 + "\n\n")
                 exposed_count = 0
                 for r in self.results:
-                    if not r.exposed_envs:
+                    # BUG 7 FIX: include targets with page findings even if no .env
+                    if not r.exposed_envs and not r.exposed_pages:
                         continue
                     exposed_count += 1
                     f.write(f"TARGET: {r.target}  [source: {r.source}]\n")
+                    # .env file findings
                     for env in r.exposed_envs:
+                        f.write(f"  [.ENV FILE]\n")
                         f.write(f"  URL:        {env.url}\n")
                         f.write(f"  HTTP:       {env.status_code}\n")
                         f.write(f"  Size:       {env.content_length}B\n")
@@ -1421,17 +1666,18 @@ class Reporter:
                             for ln in lines:
                                 f.write(f"    {ln}\n")
                         f.write("\n")
-                for page in r.exposed_pages:
-                    f.write(f"  [WEB EXPOSURE] {page.label}\n")
-                    f.write(f"  URL:        {page.url}\n")
-                    f.write(f"  HTTP:       {page.status_code}\n")
-                    f.write(f"  Size:       {page.content_length}B\n")
-                    f.write(f"  Risk Level: {page.risk_level}\n")
-                    for ev in page.evidence:
-                        f.write(f"    → {ev}\n")
-                    f.write("\n")
+                    # Web exposure page findings — BUG 7: indentation was broken
+                    for page in r.exposed_pages:
+                        f.write(f"  [WEB EXPOSURE] {page.label}\n")
+                        f.write(f"  URL:        {page.url}\n")
+                        f.write(f"  HTTP:       {page.status_code}\n")
+                        f.write(f"  Size:       {page.content_length}B\n")
+                        f.write(f"  Risk Level: {page.risk_level}\n")
+                        for ev in page.evidence:
+                            f.write(f"    → {ev}\n")
+                        f.write("\n")
                 if exposed_count == 0:
-                    f.write("No exposed .env files found.\n")
+                    f.write("No exposures found.\n")
             console.print(f"[bold green]✔[/bold green] TXT  → [cyan]{path}[/cyan]")
         except OSError as e:
             console.print(f"[red]  [!] Could not write TXT: {e}[/red]")
@@ -1439,8 +1685,7 @@ class Reporter:
     def save_html(self, path: str):
         rows = ""
         for r in self.results:
-            if not r.exposed_envs:
-                continue
+            # BUG FIX: don't skip targets that only have page findings
             for env in r.exposed_envs:
                 rc = {"CRITICAL": "critical", "HIGH": "high",
                       "MEDIUM": "medium", "LOW": "low"}.get(env.risk_level, "low")
@@ -1657,7 +1902,7 @@ def _print_history():
 def interactive_wizard():
     console.print(BANNER)
     console.print(Panel(
-        "[bold white]EnvHunter v4.0 — Web Exposure & Secrets Recon Framework[/bold white]\n"
+        "[bold white]EnvHunter v4.1 — Web Exposure & Secrets Recon Framework[/bold white]\n"
         "[dim]Authorized use only. Scan only systems you own or have explicit permission to test.[/dim]",
         border_style="cyan"
     ))
