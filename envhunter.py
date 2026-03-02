@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-╔══════════════════════════════════════════════════════════════════════╗
-║                                                                      ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗           ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║           ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║           ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║           ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
-║                                                                      ║
-║       .env Exposure & Secrets Recon Framework  v3.1                  ║
-║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
-╚══════════════════════════════════════════════════════════════════════╝
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗  ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║  ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║  ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║  ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║  ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝  ║
+║                                                           ║
+║       .env Exposure & Secrets Recon Framework  v4.0       ║
+║               Author : g33l0  |  Telegram : @x0x0h33l0    ║
+╚═══════════════════════════════════════════════════════════╝
 """
 
 # ── stdlib ────────────────────────────────────────────────────────────────────
@@ -66,41 +66,281 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "3.1"
+VERSION   = "4.0"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
 
 BANNER = """[bold cyan]
-╔═════════════════════════════════════════════════════════════╗
-║                                                             ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗    ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║    ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║    ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║    ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║    ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ║
-║                                                             ║
-║       [bold white]  .env Exposure & Secrets Recon Framework  v3.1[/bold white][bold cyan]       ║
-║         [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]          ║
-╚═════════════════════════════════════════════════════════════╝[/bold cyan]"""
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗  ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║  ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║  ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║  ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║  ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝  ║
+║                                                           ║
+║      [bold white]  .env Exposure & Secrets Recon Framework  v4.0[/bold white][bold cyan]      ║
+║         [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]        ║
+╚═══════════════════════════════════════════════════════════╝[/bold cyan]"""
 
-# ─── ENV PATHS ────────────────────────────────────────────────────────────────
-ENV_PATHS: List[str] = [
-    "/.env", "/.env.local", "/.env.dev", "/.env.development",
-    "/.env.prod", "/.env.production", "/.env.staging", "/.env.backup",
-    "/.env.bak", "/.env.old", "/.env.example", "/.env.sample",
-    "/.env.test", "/.env.php", "/.env.save", "/.env.copy",
-    "/.env.dist", "/.env.secret",
-    "/api/.env", "/backend/.env", "/app/.env", "/config/.env",
-    "/src/.env", "/public/.env", "/web/.env", "/www/.env",
-    "/laravel/.env", "/wp-content/.env", "/application/.env",
-    "/server/.env", "/deploy/.env", "/docker/.env",
-    "/storage/.env", "/core/.env", "/portal/.env",
-]
+# ─── SCAN MODULES ─────────────────────────────────────────────────────────────
+# Each module is a named group of paths. The engine checks ALL enabled modules.
+# Add new modules here without touching the scan engine.
 
-# ─── DETECTION ────────────────────────────────────────────────────────────────
+SCAN_MODULES: dict = {
+
+    # ── Already existed in v3.x ──────────────────────────────────────────────
+    "env_files": {
+        "enabled": True,
+        "label":   ".env Files",
+        "paths": [
+            "/.env", "/.env.local", "/.env.dev", "/.env.development",
+            "/.env.prod", "/.env.production", "/.env.staging", "/.env.backup",
+            "/.env.bak", "/.env.old", "/.env.example", "/.env.sample",
+            "/.env.test", "/.env.php", "/.env.save", "/.env.copy",
+            "/.env.dist", "/.env.secret",
+            "/api/.env", "/backend/.env", "/app/.env", "/config/.env",
+            "/src/.env", "/public/.env", "/web/.env", "/www/.env",
+            "/laravel/.env", "/wp-content/.env", "/application/.env",
+            "/server/.env", "/deploy/.env", "/docker/.env",
+            "/storage/.env", "/core/.env", "/portal/.env",
+        ],
+    },
+
+    # ── NEW: phpMyAdmin & DB Admin Tools ─────────────────────────────────────
+    "phpmyadmin": {
+        "enabled": True,
+        "label":   "phpMyAdmin / DB Admin",
+        "paths": [
+            "/phpmyadmin/", "/phpmyadmin/index.php",
+            "/phpMyAdmin/", "/phpMyAdmin/index.php",
+            "/pma/", "/pma/index.php",
+            "/admin/phpmyadmin/", "/db/", "/dbadmin/",
+            "/mysql/", "/mysqladmin/", "/phpmyadmin2/",
+            "/phpmyadmin3/", "/phpmyadmin4/",
+            "/myadmin/", "/sqlmanager/", "/mysqlmanager/",
+            "/php-myadmin/", "/phpmy-admin/",
+            "/adminer.php", "/adminer/",
+            "/adminer-4.php", "/adminer-4.7.9.php",
+        ],
+    },
+
+    # ── NEW: Admin Panels ─────────────────────────────────────────────────────
+    "admin_panels": {
+        "enabled": True,
+        "label":   "Admin Panels",
+        "paths": [
+            "/admin/", "/admin/login", "/admin/login.php", "/admin/index.php",
+            "/administrator/", "/administrator/index.php",
+            "/adminpanel/", "/admin-panel/", "/wp-admin/",
+            "/wp-login.php", "/user/login", "/auth/login",
+            "/backend/", "/backend/login", "/control/",
+            "/controlpanel/", "/cp/", "/cpanel/",
+            "/manage/", "/management/", "/manager/",
+            "/moderator/", "/superadmin/", "/siteadmin/",
+            "/webadmin/", "/adminarea/", "/bb-admin/",
+            "/adminLogin/", "/admin_area/", "/panel-administracion/",
+            "/instadmin/", "/memberadmin/", "/administratorlogin/",
+        ],
+    },
+
+    # ── NEW: PHP Info & Debug Pages ───────────────────────────────────────────
+    "php_info": {
+        "enabled": True,
+        "label":   "PHP Info / Debug",
+        "paths": [
+            "/phpinfo.php", "/info.php", "/php_info.php", "/phpinfo/",
+            "/test.php", "/info/", "/?phpinfo=1",
+            "/debug/", "/debug/default/view", "/debug/vars",
+            "/_profiler/", "/_profiler/phpinfo",
+            "/telescope", "/telescope/requests",
+            "/horizon", "/clockwork/app", "/__clockwork/",
+            "/debugbar/",
+        ],
+    },
+
+    # ── NEW: Server Status & Version Disclosure ───────────────────────────────
+    "server_status": {
+        "enabled": True,
+        "label":   "Server Status / Info",
+        "paths": [
+            "/server-status", "/server-info",
+            "/nginx_status", "/status",
+            "/actuator", "/actuator/health",
+            "/actuator/env", "/actuator/info",
+            "/actuator/mappings", "/actuator/beans",
+            "/actuator/logfile", "/actuator/httptrace",
+            "/metrics", "/health", "/healthz",
+            "/ready", "/readyz", "/live", "/livez",
+            "/_cat/indices", "/_cat/nodes",
+            "/_cluster/health",
+            "/solr/", "/solr/admin/",
+            "/jmx", "/jolokia/",
+        ],
+    },
+
+    # ── NEW: Exposed Config Files ─────────────────────────────────────────────
+    "config_files": {
+        "enabled": True,
+        "label":   "Config Files",
+        "paths": [
+            "/config.php", "/config/config.php", "/configuration.php",
+            "/config/database.php", "/config/app.php",
+            "/wp-config.php", "/wp-config.php.bak",
+            "/config.inc.php", "/settings.php", "/settings.inc.php",
+            "/database.php", "/db.php", "/db_config.php",
+            "/conf/config.php", "/includes/config.php",
+            "/application/config/database.php",
+            "/app/config/database.php",
+            "/sites/default/settings.php",
+            "/config/settings.inc.php",
+            "/config.xml", "/config.json",
+            "/config.yml", "/config.yaml", "/.config",
+            "/config/config.yml", "/config/config.yaml",
+            "/app/config/parameters.yml",
+            "/app/config/parameters.yaml",
+        ],
+    },
+
+    # ── NEW: Backup & Database Dumps ─────────────────────────────────────────
+    "backup_files": {
+        "enabled": True,
+        "label":   "Backup / Dump Files",
+        "paths": [
+            "/backup.sql", "/backup.sql.gz", "/dump.sql",
+            "/database.sql", "/db.sql", "/db_backup.sql",
+            "/backup/", "/backups/", "/backup.zip",
+            "/backup.tar.gz", "/backup.tar",
+            "/site.tar.gz", "/website.zip", "/www.zip",
+            "/public_html.zip", "/html.zip",
+            "/db_dump.sql", "/mysqldump.sql",
+            "/latest.sql", "/prod.sql", "/production.sql",
+        ],
+    },
+
+    # ── NEW: Git / VCS Exposure ───────────────────────────────────────────────
+    "git_exposure": {
+        "enabled": True,
+        "label":   "Git / VCS Exposure",
+        "paths": [
+            "/.git/config", "/.git/HEAD", "/.git/COMMIT_EDITMSG",
+            "/.git/index", "/.git/packed-refs",
+            "/.gitignore", "/.gitmodules", "/.gitattributes",
+            "/.svn/entries", "/.svn/wc.db",
+            "/.hg/hgrc", "/.bzr/README",
+            "/CVS/Root", "/CVS/Entries",
+        ],
+    },
+
+    # ── NEW: Log Files ────────────────────────────────────────────────────────
+    "log_files": {
+        "enabled": True,
+        "label":   "Log Files",
+        "paths": [
+            "/logs/", "/log/", "/error.log", "/error_log",
+            "/access.log", "/access_log",
+            "/app/storage/logs/laravel.log",
+            "/storage/logs/laravel.log",
+            "/storage/logs/",
+            "/logs/error.log", "/logs/app.log",
+            "/logs/debug.log", "/site/logs/",
+            "/.npm-debug.log", "/npm-debug.log",
+            "/yarn-error.log", "/debug.log",
+        ],
+    },
+
+    # ── NEW: SSH Keys & Certificates ─────────────────────────────────────────
+    "ssh_keys": {
+        "enabled": True,
+        "label":   "SSH Keys / Certs",
+        "paths": [
+            "/.ssh/id_rsa", "/.ssh/id_dsa", "/.ssh/id_ecdsa",
+            "/.ssh/id_ed25519", "/.ssh/authorized_keys",
+            "/.ssh/known_hosts", "/.ssh/config",
+            "/id_rsa", "/id_rsa.pub",
+            "/server.key", "/private.key",
+            "/ssl.key", "/ssl.crt", "/server.crt",
+        ],
+    },
+
+    # ── NEW: Composer / Package Manifests ────────────────────────────────────
+    "package_files": {
+        "enabled": True,
+        "label":   "Package / Dependency Files",
+        "paths": [
+            "/composer.json", "/composer.lock",
+            "/package.json", "/package-lock.json",
+            "/yarn.lock", "/Gemfile", "/Gemfile.lock",
+            "/requirements.txt", "/Pipfile", "/Pipfile.lock",
+            "/go.mod", "/go.sum",
+        ],
+    },
+
+    # ── NEW: Docker / DevOps / CI ─────────────────────────────────────────────
+    "devops_files": {
+        "enabled": True,
+        "label":   "Docker / DevOps / CI",
+        "paths": [
+            "/docker-compose.yml", "/docker-compose.yaml",
+            "/docker-compose.override.yml",
+            "/docker-compose.prod.yml",
+            "/Dockerfile", "/.dockerignore",
+            "/kubernetes.yml", "/k8s.yml",
+            "/.travis.yml", "/.circleci/config.yml",
+            "/Jenkinsfile",
+            "/ansible.cfg", "/playbook.yml",
+            "/terraform.tfvars", "/Vagrantfile",
+        ],
+    },
+
+    # ── NEW: API Docs & GraphQL ───────────────────────────────────────────────
+    "api_exposure": {
+        "enabled": True,
+        "label":   "API Docs / GraphQL",
+        "paths": [
+            "/swagger.json", "/swagger.yaml",
+            "/swagger-ui/", "/swagger-ui.html",
+            "/api-docs/", "/api-docs.json",
+            "/openapi.json", "/openapi.yaml",
+            "/v1/api-docs", "/v2/api-docs",
+            "/graphql", "/graphiql", "/playground",
+            "/api/swagger", "/docs/api",
+        ],
+    },
+
+    # ── NEW: WordPress Specific ───────────────────────────────────────────────
+    "wordpress": {
+        "enabled": True,
+        "label":   "WordPress",
+        "paths": [
+            "/wp-json/wp/v2/users",
+            "/wp-json/",
+            "/wp-content/debug.log",
+            "/wp-content/uploads/",
+            "/xmlrpc.php",
+            "/?author=1",
+            "/?author=2",
+            "/wp-includes/",
+            "/wp-config-sample.php",
+        ],
+    },
+}
+
+# Convenience flat list for backwards-compat (extra_paths etc.)
+ENV_PATHS: List[str] = []
+for _mod in SCAN_MODULES.values():
+    if _mod["enabled"]:
+        ENV_PATHS.extend(_mod["paths"])
+ENV_PATHS = list(dict.fromkeys(ENV_PATHS))  # deduplicate preserving order
+
+# ─── DETECTION PATTERNS ───────────────────────────────────────────────────────
+# Applied to file CONTENT for .env / config / log files.
+# Applied to RESPONSE METADATA (headers, URL, body keywords) for page-type checks.
+
 SENSITIVE_PATTERNS = {
+    # ── Existing patterns (v3.x) ─────────────────────────────────────────────
     "SMTP / Mail":          r'(?i)(smtp|mail_host|mail_port|mail_user|mail_pass|mailer|sendgrid|mailgun|ses_key)',
     "Database Credentials": r'(?i)(db_pass|db_user|database_url|mysql_pw|postgres_pass|mongo_uri|db_host|db_name)',
     "API Keys":             r'(?i)(api_key|api_secret|api_token|access_key|secret_key|client_secret|consumer_key)',
@@ -115,6 +355,36 @@ SENSITIVE_PATTERNS = {
     "Redis / Cache":        r'(?i)(redis_url|redis_pass|redis_host|memcached_pass)',
     "Webhook Secrets":      r'(?i)(webhook_secret|slack_token|discord_token|telegram_bot)',
     "General Secrets":      r'(?i)(secret|token|key|credential|passwd)[\s]*[=:]+[\s]*[^\s]{6,}',
+    # ── New patterns (v4.0) ───────────────────────────────────────────────────
+    "Docker / DevOps":      r'(?i)(docker_pass|registry_pass|ci_token|deploy_key|ansible_pass|vault_token|terraform)',
+    "SSH / Private Keys":   r'(?i)(-----BEGIN|RSA PRIVATE|OPENSSH PRIVATE|DSA PRIVATE|EC PRIVATE|ssh-rsa|ssh-ed25519)',
+    "Spring Boot Actuator": r'(?i)(spring\.datasource|spring\.security|management\.endpoints)',
+    "WordPress Secrets":    r'(?i)(DB_PASSWORD|AUTH_KEY|SECURE_AUTH_KEY|LOGGED_IN_KEY|table_prefix)',
+    "Laravel App Config":   r'(?i)(APP_KEY=base64|APP_DEBUG=true|APP_ENV=local|cipher=AES)',
+    "Database DSN":         r'(?i)(mysql://|postgres://|postgresql://|mongodb://|redis://|sqlite://)',
+    "Internal IPs":         r'(?i)(db_host|redis_host|memcached_host|mq_host)[\s]*[=:][\s]*(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)',
+    "Version Disclosure":   r'(?i)(x-powered-by|server:\s*(apache|nginx|iis|php|laravel|express))',
+}
+
+# ── Per-module content signatures ─────────────────────────────────────────────
+# Used by the exposure scanner to validate that a page response is genuinely
+# the resource we expect (not a 200 OK catch-all / soft 404).
+
+MODULE_SIGNATURES: dict = {
+    "phpmyadmin":    [r'(?i)(phpmyadmin|pma_|pmahomme|phpMyAdmin)', r'(?i)(mysql|mariadb|database)'],
+    "admin_panels":  [r'(?i)(login|username|password|admin|administrator|sign.?in)'],
+    "php_info":      [r'(?i)(phpinfo|PHP Version|php\.ini|Configuration|extension)'],
+    "server_status": [r'(?i)(server.status|requests.currently|uptime|connections|worker)'],
+    "config_files":  [r'(?i)(password|database|secret|key|host|username|token)'],
+    "backup_files":  [r'(?i)(INSERT INTO|CREATE TABLE|mysqldump|Database:|Host:)'],
+    "git_exposure":  [r'(?i)(repositoryformatversion|filemode|bare|ref:|HEAD|branch)'],
+    "log_files":     [r'(?i)(ERROR|WARNING|NOTICE|Stack trace|exception|Traceback|\[error\])'],
+    "ssh_keys":      [r'(?i)(-----BEGIN|RSA PRIVATE|OPENSSH|ssh-rsa|ssh-ed25519)'],
+    "package_files": [r'(?i)("name"|"version"|"dependencies"|"require"|packages)'],
+    "devops_files":  [r'(?i)(version:|services:|image:|FROM |RUN |ENV |COPY |ARG )'],
+    "api_exposure":  [r'(?i)(swagger|openapi|paths:|definitions:|"info":|"paths":)'],
+    "wordpress":     [r'(?i)(wp-|wordpress|wp_|woocommerce|wp-content)'],
+    "env_files":     [],  # uses existing _looks_like_env() logic
 }
 
 FP_MARKERS = [
@@ -138,6 +408,45 @@ def aget(args, attr: str, default=None):
     return getattr(args, attr, default)
 
 
+# ─── SAFE PROMPT HELPERS ──────────────────────────────────────────────────────
+def prompt_int(question: str, default: int, min_val: int = 1, max_val: int = 99999) -> int:
+    """
+    Ask for an integer with validation loop.
+    Accepts:  '10', '10.0', '10.5' (truncated), '  10  '
+    Rejects:  'abc', '', negative (if min_val > 0)
+    """
+    while True:
+        raw = Prompt.ask(question, default=str(default)).strip()
+        try:
+            # Accept floats like '0.5' and truncate — user intent is clear
+            val = int(float(raw))
+            if min_val <= val <= max_val:
+                return val
+            console.print(f"  [red]  ✗ Enter a number between {min_val} and {max_val}[/red]")
+        except (ValueError, OverflowError):
+            console.print(f"  [red]  ✗ '{raw}' is not a valid number — try again[/red]")
+
+
+def prompt_float(question: str, default: float, min_val: float = 0.0, max_val: float = 3600.0) -> float:
+    """
+    Ask for a float with validation loop.
+    Accepts:  '0', '0.5', '1', '1.5', '2.0', '.5'
+    Rejects:  'abc', 'half', negative values
+    """
+    while True:
+        raw = Prompt.ask(question, default=str(default)).strip()
+        # Allow common shorthand: '.5' → '0.5'
+        if raw.startswith('.'):
+            raw = '0' + raw
+        try:
+            val = float(raw)
+            if min_val <= val <= max_val:
+                return val
+            console.print(f"  [red]  ✗ Enter a number between {min_val} and {max_val}[/red]")
+        except (ValueError, OverflowError):
+            console.print(f"  [red]  ✗ '{raw}' is not a valid number — try again (e.g. 0.5, 1, 2)[/red]")
+
+
 # ─── DATA MODELS ──────────────────────────────────────────────────────────────
 class ExposedEnv:
     def __init__(self, url: str, status_code: int, content_length: int, content_type: str):
@@ -150,13 +459,31 @@ class ExposedEnv:
         self.risk_level     = "LOW"
 
 
+class ExposedPage:
+    """
+    Represents any publicly accessible resource that should NOT be public.
+    Covers phpMyAdmin, admin panels, debug pages, git repos, backups, etc.
+    """
+    def __init__(self, url: str, status_code: int, content_length: int,
+                 module: str, label: str, evidence: List[str]):
+        self.url            = url
+        self.status_code    = status_code
+        self.content_length = content_length
+        self.module         = module   # key from SCAN_MODULES
+        self.label          = label    # human label e.g. "phpMyAdmin / DB Admin"
+        self.evidence       = evidence # matched signature lines / keywords
+        self.risk_level     = "MEDIUM" # default; engine upgrades based on module
+        self.raw_snippet    = ""       # first 500 chars of response
+
+
 class ScanResult:
     def __init__(self, target: str):
-        self.target        = target
-        self.timestamp     = datetime.utcnow().isoformat()
-        self.exposed_envs: List[ExposedEnv] = []
-        self.scan_status   = "pending"
-        self.source        = "manual"  # manual | shodan | censys | crtsh | hackertarget | otx
+        self.target          = target
+        self.timestamp       = datetime.utcnow().isoformat()
+        self.exposed_envs:  List[ExposedEnv]  = []
+        self.exposed_pages: List[ExposedPage] = []   # NEW
+        self.scan_status     = "pending"
+        self.source          = "manual"  # manual | shodan | censys | crtsh | hackertarget | otx
 
 
 # ─── DEFAULT ARGS ─────────────────────────────────────────────────────────────
@@ -284,6 +611,29 @@ class StateDB:
                 "SELECT url,risk_level,categories,first_seen,last_seen "
                 "FROM seen_findings ORDER BY first_seen DESC"
             ).fetchall()
+
+    def _fp_page(self, page) -> str:
+        raw = page.url + "|page|" + page.module
+        return hashlib.sha256(raw.encode()).hexdigest()
+
+    def is_new_page(self, page) -> bool:
+        fp = self._fp_page(page)
+        with self.lock:
+            row = self.conn.execute(
+                "SELECT 1 FROM seen_findings WHERE fingerprint=?", (fp,)
+            ).fetchone()
+        return row is None
+
+    def mark_seen_page(self, page):
+        fp  = self._fp_page(page)
+        now = datetime.utcnow().isoformat()
+        with self.lock:
+            self.conn.execute("""
+                INSERT INTO seen_findings (fingerprint,url,risk_level,categories,first_seen,last_seen)
+                VALUES (?,?,?,?,?,?)
+                ON CONFLICT(fingerprint) DO UPDATE SET last_seen=excluded.last_seen
+            """, (fp, page.url, page.risk_level, page.label, now, now))
+            self.conn.commit()
 
     def close(self):
         try:
@@ -529,12 +879,30 @@ class TelegramNotifier:
             f"📋 <b>EnvHunter — Scan Complete</b>\n"
             f"━━━━━━━━━━━━━━━━━━━━━━\n"
             f"🎯 Targets Scanned : <b>{stats.get('scanned',0)}</b>\n"
-            f"🚨 Exposed         : <b>{stats.get('exposed',0)}</b>\n"
+            f"🚨 .env Exposed    : <b>{stats.get('exposed',0)}</b>\n"
+            f"🌐 Pages Exposed   : <b>{stats.get('pages_found',0)}</b>\n"
             f"🔴 Critical        : <b>{stats.get('critical',0)}</b>\n"
             f"🆕 New Findings    : <b>{stats.get('new_findings',0)}</b>\n"
             f"🕐 Completed       : {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}\n"
             f"\n<i>EnvHunter v{VERSION} | {AUTHOR} | {TG_HANDLE}</i>"
         )
+        return self._send(msg)
+
+    def send_page_finding(self, page, target: str) -> bool:
+        emoji  = {"CRITICAL": "🔴", "HIGH": "🟠", "MEDIUM": "🟡", "LOW": "🟢"}.get(page.risk_level, "⚪")
+        ev     = "\n".join(f"  • <code>{e}</code>" for e in page.evidence[:5]) or "  • <i>Confirmed accessible</i>"
+        msg = (
+            f"🆕 <b>NEW FINDING</b>\n"
+            f"{emoji} <b>EnvHunter Alert — {page.risk_level}</b>\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"🎯 <b>Target:</b> <code>{target}</code>\n"
+            f"🔗 <b>URL:</b> <code>{page.url}</code>\n"
+            f"📂 <b>Type:</b> {page.label}\n"
+            f"📊 <b>HTTP:</b> {page.status_code}  |  📏 <b>Size:</b> {page.content_length}B\n"
+            f"🕐 <b>Time:</b> {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}\n"
+            f"\n🔍 <b>Evidence:</b>\n{ev}\n"
+            f"\n<i>EnvHunter v{{VERSION}} | {AUTHOR} | {TG_HANDLE}</i>"
+        ).replace("{VERSION}", VERSION)
         return self._send(msg)
 
     def test_connection(self) -> bool:
@@ -554,6 +922,7 @@ class EnvHunter:
         self.stats    = {
             "total": 0, "exposed": 0, "critical": 0,
             "scanned": 0, "errors": 0, "new_findings": 0,
+            "pages_found": 0,   # NEW: non-.env exposures
         }
         self.state_db = StateDB(DB_PATH)
         self.notifier: Optional[TelegramNotifier] = None
@@ -666,17 +1035,92 @@ class EnvHunter:
                 console.print(f"[dim red]  [!] {url}: {e}[/dim red]")
         return None
 
+    def _page_risk(self, module: str) -> str:
+        """Assign risk level based on which module detected the exposure."""
+        critical = {"phpmyadmin", "backup_files", "ssh_keys", "git_exposure"}
+        high     = {"admin_panels", "config_files", "devops_files", "php_info"}
+        medium   = {"server_status", "log_files", "wordpress", "api_exposure",
+                    "package_files"}
+        low      = {"env_files"}  # handled separately by _fetch_url
+        if module in critical: return "CRITICAL"
+        if module in high:     return "HIGH"
+        if module in medium:   return "MEDIUM"
+        return "LOW"
+
+    def _fetch_page(self, url: str, module: str) -> Optional[ExposedPage]:
+        """
+        Fetch a non-.env URL and check if it's genuinely exposed.
+        Uses MODULE_SIGNATURES to confirm the page is real (not a soft 404).
+        Returns ExposedPage if confirmed exposed, None otherwise.
+        """
+        try:
+            resp = self.session.get(
+                url, headers=self._headers(),
+                allow_redirects=True,   # follow redirects for admin panels
+                timeout=self.args.timeout
+            )
+            if resp.status_code not in (200, 206):
+                return None
+
+            try:
+                content = resp.text
+            except Exception:
+                content = resp.content.decode("utf-8", errors="replace")
+
+            if not content or len(content) < 20:
+                return None
+
+            # Check against module signatures to reject soft 404s
+            sigs = MODULE_SIGNATURES.get(module, [])
+            evidence: List[str] = []
+
+            if sigs:
+                for sig in sigs:
+                    matches = re.findall(sig, content[:5000])
+                    if matches:
+                        # Deduplicate and clean evidence
+                        for m in matches[:3]:
+                            m_str = m if isinstance(m, str) else m[0]
+                            if m_str and m_str not in evidence:
+                                evidence.append(m_str[:80])
+                if not evidence:
+                    return None  # No signature match — likely soft 404
+            else:
+                # No signatures defined — trust HTTP 200 + content length
+                if len(content) < 100:
+                    return None
+
+            label      = SCAN_MODULES.get(module, {}).get("label", module)
+            page       = ExposedPage(url, resp.status_code, len(content),
+                                     module, label, evidence)
+            page.risk_level  = self._page_risk(module)
+            page.raw_snippet = content[:500]
+            return page
+
+        except requests.exceptions.SSLError:
+            if url.startswith("https://"):
+                return self._fetch_page(url.replace("https://", "http://"), module)
+        except (requests.exceptions.ConnectionError,
+                requests.exceptions.Timeout,
+                requests.exceptions.TooManyRedirects):
+            pass
+        except Exception as e:
+            if self.args.verbose:
+                console.print(f"[dim red]  [!] {url}: {e}[/dim red]")
+        return None
+
     def scan_target(self, target: str) -> ScanResult:
         target = self._normalize(target)
         result = ScanResult(target)
         result.scan_status = "running"
 
-        paths = list(ENV_PATHS)
+        # ── Phase 1: .env file scanning (existing logic) ───────────────────
+        env_paths = list(SCAN_MODULES["env_files"]["paths"])
         for p in (self.args.extra_paths or []):
-            if p not in paths:
-                paths.append(p)
+            if p not in env_paths:
+                env_paths.append(p)
 
-        for path in paths:
+        for path in env_paths:
             url = target + path
             env = self._fetch_url(url)
             if env:
@@ -688,7 +1132,7 @@ class EnvHunter:
                     rc    = {"CRITICAL": "red", "HIGH": "yellow",
                              "MEDIUM": "cyan", "LOW": "green"}.get(env.risk_level, "white")
                     badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
-                    console.print(f"  {badge}[bold {rc}]✓ [{env.risk_level}] {url}[/bold {rc}]")
+                    console.print(f"  {badge}[bold {rc}]✓ .env [{env.risk_level}] {url}[/bold {rc}]")
 
                 if self.notifier and is_new:
                     self.notifier.send_finding(env, target, is_new=True)
@@ -697,6 +1141,37 @@ class EnvHunter:
 
             if self.args.delay:
                 time.sleep(random.uniform(self.args.delay * 0.5, self.args.delay))
+
+        # ── Phase 2: Web exposure scanning (new in v4.0) ───────────────────
+        for mod_key, mod_cfg in SCAN_MODULES.items():
+            if mod_key == "env_files":
+                continue  # already handled above
+            if not mod_cfg.get("enabled", True):
+                continue
+
+            for path in mod_cfg["paths"]:
+                url  = target + path
+                page = self._fetch_page(url, mod_key)
+                if page:
+                    result.exposed_pages.append(page)
+                    is_new = self.state_db.is_new_page(page)
+                    self.state_db.mark_seen_page(page)
+
+                    if self.args.verbose:
+                        rc    = {"CRITICAL": "red", "HIGH": "yellow",
+                                 "MEDIUM": "cyan", "LOW": "green"}.get(page.risk_level, "white")
+                        badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
+                        console.print(
+                            f"  {badge}[bold {rc}]✓ {page.label} [{page.risk_level}] {url}[/bold {rc}]"
+                        )
+
+                    if self.notifier and is_new:
+                        self.notifier.send_page_finding(page, target)
+                        with self.lock:
+                            self.stats["new_findings"] += 1
+
+                if self.args.delay:
+                    time.sleep(random.uniform(self.args.delay * 0.5, self.args.delay))
 
         result.scan_status = "done"
         return result
@@ -726,6 +1201,11 @@ class EnvHunter:
                                 for env in result.exposed_envs:
                                     if env.risk_level == "CRITICAL":
                                         self.stats["critical"] += 1
+                        if result.exposed_pages:
+                            self.stats["pages_found"] += len(result.exposed_pages)
+                            for page in result.exposed_pages:
+                                if page.risk_level == "CRITICAL":
+                                    self.stats["critical"] += 1
                     except Exception as e:
                         with self.lock:
                             self.stats["errors"] += 1
@@ -772,26 +1252,33 @@ class Reporter:
         )
         t.add_column("Target",        style="bold white", no_wrap=True)
         t.add_column("Source",        justify="center")
-        t.add_column("Status",        justify="center")
-        t.add_column("Exposed Paths", justify="center")
+        t.add_column(".env Status",   justify="center")
+        t.add_column(".env Paths",    justify="center")
+        t.add_column("Pages Found",   justify="center")
         t.add_column("Findings",      justify="center")
         t.add_column("Risk",          justify="center")
         for r in self.results:
-            src = f"[dim]{r.source}[/dim]"
-            if r.exposed_envs:
-                hr = max(
-                    r.exposed_envs,
-                    key=lambda e: ["LOW", "MEDIUM", "HIGH", "CRITICAL"].index(e.risk_level)
-                ).risk_level
-                tf = sum(len(v) for e in r.exposed_envs for v in e.findings.values())
+            src_label = f"[dim]{r.source}[/dim]"
+            # Determine highest risk across both env and page findings
+            all_risks  = ([e.risk_level for e in r.exposed_envs] +
+                          [p.risk_level for p in r.exposed_pages])
+            risk_order = ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+            highest    = max(all_risks, key=lambda x: risk_order.index(x)) if all_risks else None
+            tf         = sum(len(v) for e in r.exposed_envs for v in e.findings.values())
+            pages_n    = len(r.exposed_pages)
+
+            if r.exposed_envs or r.exposed_pages:
+                env_status = "[bold green]✓ .env EXPOSED[/bold green]" if r.exposed_envs else "[dim]✗ .env Clean[/dim]"
                 t.add_row(
-                    r.target, src,
-                    "[bold green]✓ EXPOSED[/bold green]",
-                    str(len(r.exposed_envs)), str(tf),
-                    f"[{self._rc(hr)}]{hr}[/{self._rc(hr)}]"
+                    r.target, src_label, env_status,
+                    str(len(r.exposed_envs)),
+                    str(pages_n) if pages_n else "[dim]0[/dim]",
+                    str(tf),
+                    f"[{self._rc(highest)}]{highest}[/{self._rc(highest)}]"
                 )
             else:
-                t.add_row(r.target, src, "[dim]✗ Clean[/dim]", "0", "0", "[dim]—[/dim]")
+                t.add_row(r.target, src_label, "[dim]✗ Clean[/dim]",
+                          "0", "0", "0", "[dim]—[/dim]")
         console.print(t)
 
     def print_findings(self):
@@ -832,14 +1319,45 @@ class Reporter:
     def print_stats(self):
         console.print()
         console.print(Panel(
-            f"[bold white]Total Targets :[/bold white]  {self.stats.get('total', 0)}\n"
-            f"[bold white]Scanned       :[/bold white]  {self.stats.get('scanned', 0)}\n"
-            f"[bold green]Exposed       :[/bold green]  {self.stats.get('exposed', 0)}\n"
-            f"[bold red]Critical      :[/bold red]  {self.stats.get('critical', 0)}\n"
-            f"[bold cyan]New Findings  :[/bold cyan]  {self.stats.get('new_findings', 0)}\n"
-            f"[bold yellow]Errors        :[/bold yellow]  {self.stats.get('errors', 0)}",
+            f"[bold white]Total Targets  :[/bold white]  {self.stats.get('total', 0)}\n"
+            f"[bold white]Scanned        :[/bold white]  {self.stats.get('scanned', 0)}\n"
+            f"[bold green].env Exposed   :[/bold green]  {self.stats.get('exposed', 0)}\n"
+            f"[bold green]Pages Exposed  :[/bold green]  {self.stats.get('pages_found', 0)}\n"
+            f"[bold red]Critical       :[/bold red]  {self.stats.get('critical', 0)}\n"
+            f"[bold cyan]New Findings   :[/bold cyan]  {self.stats.get('new_findings', 0)}\n"
+            f"[bold yellow]Errors         :[/bold yellow]  {self.stats.get('errors', 0)}",
             title="[bold cyan]◉ Final Statistics[/bold cyan]", border_style="cyan"
         ))
+
+    def print_page_findings(self):
+        """Print all non-.env web exposure findings."""
+        page_results = [r for r in self.results if r.exposed_pages]
+        if not page_results:
+            return
+        console.print()
+        console.print(Panel(
+            "[bold white]Non-.env resources publicly accessible[/bold white]",
+            title="[bold cyan]◉ Web Exposure Findings[/bold cyan]", border_style="cyan"
+        ))
+        for r in page_results:
+            for page in r.exposed_pages:
+                rc = self._rc(page.risk_level)
+                console.print(
+                    f"\n  [{rc}]■[/{rc}] [bold white]{page.label}[/bold white]  "
+                    f"[{rc}][{page.risk_level}][/{rc}]"
+                )
+                console.print(f"    [bold white]URL   :[/bold white] {page.url}")
+                console.print(f"    [bold white]HTTP  :[/bold white] {page.status_code}  "
+                              f"[bold white]Size:[/bold white] {page.content_length}B")
+                if page.evidence:
+                    console.print("    [bold white]Evidence:[/bold white]")
+                    for ev in page.evidence[:5]:
+                        console.print(f"      [dim yellow]→[/dim yellow] {ev}")
+                if self.args.show_content and page.raw_snippet:
+                    console.print(Panel(
+                        page.raw_snippet[:500],
+                        title="[dim]Response Snippet[/dim]", border_style="dim"
+                    ))
 
     def save_json(self, path: str):
         data = []
@@ -848,10 +1366,12 @@ class Reporter:
                 continue
             entry = {
                 "target": r.target, "source": r.source,
-                "timestamp": r.timestamp, "exposed": []
+                "timestamp": r.timestamp,
+                "exposed_env_files": [],
+                "exposed_pages": [],
             }
             for env in r.exposed_envs:
-                entry["exposed"].append({
+                entry["exposed_env_files"].append({
                     "url":            env.url,
                     "status_code":    env.status_code,
                     "content_length": env.content_length,
@@ -859,6 +1379,17 @@ class Reporter:
                     "risk_level":     env.risk_level,
                     "findings":       env.findings,
                     "raw_content":    env.raw_content if not self.args.redact else "[REDACTED]",
+                })
+            for page in r.exposed_pages:
+                entry["exposed_pages"].append({
+                    "url":            page.url,
+                    "status_code":    page.status_code,
+                    "content_length": page.content_length,
+                    "module":         page.module,
+                    "label":          page.label,
+                    "risk_level":     page.risk_level,
+                    "evidence":       page.evidence,
+                    "raw_snippet":    page.raw_snippet if not self.args.redact else "[REDACTED]",
                 })
             data.append(entry)
         try:
@@ -890,6 +1421,15 @@ class Reporter:
                             for ln in lines:
                                 f.write(f"    {ln}\n")
                         f.write("\n")
+                for page in r.exposed_pages:
+                    f.write(f"  [WEB EXPOSURE] {page.label}\n")
+                    f.write(f"  URL:        {page.url}\n")
+                    f.write(f"  HTTP:       {page.status_code}\n")
+                    f.write(f"  Size:       {page.content_length}B\n")
+                    f.write(f"  Risk Level: {page.risk_level}\n")
+                    for ev in page.evidence:
+                        f.write(f"    → {ev}\n")
+                    f.write("\n")
                 if exposed_count == 0:
                     f.write("No exposed .env files found.\n")
             console.print(f"[bold green]✔[/bold green] TXT  → [cyan]{path}[/cyan]")
@@ -925,8 +1465,29 @@ class Reporter:
                     f"<td class='findings'>{fh}</td>"
                     f"</tr>"
                 )
+        # ── Page findings rows ──────────────────────────────────────────
+        page_rows = ""
+        for r in self.results:
+            for page in r.exposed_pages:
+                rc2   = {"CRITICAL":"critical","HIGH":"high","MEDIUM":"medium","LOW":"low"}.get(page.risk_level,"low")
+                evh   = "".join(f"<code>{ev.replace('<','&lt;').replace('>','&gt;')}</code><br>" for ev in page.evidence[:5]) or "<em>Accessible</em>"
+                safe_t = r.target.replace("<","&lt;").replace(">","&gt;")
+                safe_u = page.url.replace('"', "&quot;")
+                page_rows += (
+                    f"<tr>"
+                    f"<td>{safe_t}<br><small class='src'>[{r.source}]</small></td>"
+                    f"<td><a href=\"{safe_u}\" target=\"_blank\">{page.url}</a></td>"
+                    f"<td>{page.status_code}</td>"
+                    f"<td>{page.content_length}</td>"
+                    f"<td><span class='badge {rc2}'>{page.risk_level}</span></td>"
+                    f"<td class='findings'><b>{page.label}</b><br>{evh}</td>"
+                    f"</tr>"
+                )
+
         if not rows:
-            rows = "<tr><td colspan='6' style='text-align:center;color:#6e7681'>No exposed .env files found.</td></tr>"
+            rows = "<tr><td colspan='6' style='text-align:center;color:#6e7681'>.env scan: No exposures found.</td></tr>"
+        if not page_rows:
+            page_rows = "<tr><td colspan='6' style='text-align:center;color:#6e7681'>Web exposure scan: No exposures found.</td></tr>"
 
         html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -961,18 +1522,29 @@ class Reporter:
   <p class="meta">
     By {AUTHOR} | {TG_HANDLE} | Generated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}
   </p>
+  <h2 style="color:#58a6ff;margin:20px 0 10px">.env File Exposures</h2>
   <table>
     <thead>
       <tr>
-        <th>Target</th>
-        <th>Exposed URL</th>
-        <th>HTTP</th>
-        <th>Size</th>
-        <th>Risk</th>
-        <th>Findings</th>
+        <th>Target</th><th>Exposed URL</th><th>HTTP</th>
+        <th>Size</th><th>Risk</th><th>Findings</th>
       </tr>
     </thead>
     <tbody>{rows}</tbody>
+  </table>
+
+  <h2 style="color:#58a6ff;margin:30px 0 10px">Web Exposure Findings</h2>
+  <p style="color:#8b949e;font-size:.85em;margin-bottom:12px">
+    phpMyAdmin, Admin Panels, Debug Pages, Config Files, Git Repos, Backups, SSH Keys, and more
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Target</th><th>Exposed URL</th><th>HTTP</th>
+        <th>Size</th><th>Risk</th><th>Type / Evidence</th>
+      </tr>
+    </thead>
+    <tbody>{page_rows}</tbody>
   </table>
 </body>
 </html>"""
@@ -1008,6 +1580,7 @@ class ScheduledRunner:
         results  = hunter.run(targets)
         reporter = Reporter(results, hunter.stats, self.args)
         reporter.print_summary_table()
+        reporter.print_page_findings()
         reporter.print_stats()
 
         out_dir = self.args.output
@@ -1084,7 +1657,7 @@ def _print_history():
 def interactive_wizard():
     console.print(BANNER)
     console.print(Panel(
-        "[bold white]EnvHunter v3.1 — .env Exposure & Secrets Recon Framework[/bold white]\n"
+        "[bold white]EnvHunter v4.0 — Web Exposure & Secrets Recon Framework[/bold white]\n"
         "[dim]Authorized use only. Scan only systems you own or have explicit permission to test.[/dim]",
         border_style="cyan"
     ))
@@ -1139,7 +1712,7 @@ def interactive_wizard():
         console.print("\n  [bold white]API-based sources:[/bold white]")
         if Confirm.ask("    Use Shodan? [requires paid API key]", default=False):
             args.shodan_key   = Prompt.ask("    Shodan API key")
-            args.shodan_pages = int(Prompt.ask("    Pages to fetch (1 page ≈ 100 results)", default="1"))
+            args.shodan_pages = prompt_int("    Pages to fetch (1 page ≈ 100 results) [1-10]", default=1, min_val=1, max_val=10)
             sq = Prompt.ask("    Shodan query  e.g. hostname:example.com http.status:200")
             args._shodan_queries = [sq]
 
@@ -1151,9 +1724,18 @@ def interactive_wizard():
 
     # ── Scan options ──────────────────────────────────────────────────────────
     console.print("\n[bold cyan][ SCAN OPTIONS ][/bold cyan]")
-    args.threads      = int(Prompt.ask("  Concurrent threads",        default="10"))
-    args.timeout      = int(Prompt.ask("  Request timeout (seconds)", default="10"))
-    args.delay        = float(Prompt.ask("  Request delay (0 = none)", default="0"))
+    args.threads = prompt_int(
+        "  Concurrent threads        [recommended: 10-20]",
+        default=10, min_val=1, max_val=100
+    )
+    args.timeout = prompt_int(
+        "  Request timeout seconds   [recommended: 10]",
+        default=10, min_val=1, max_val=120
+    )
+    args.delay = prompt_float(
+        "  Delay between requests    [0=none | 0.5=safe | 1=stealth]",
+        default=0.0, min_val=0.0, max_val=60.0
+    )
     args.redact       = Confirm.ask("  Redact secret values in all output?",        default=False)
     args.aggressive   = Confirm.ask("  Aggressive mode (check all content types)?", default=False)
     args.verbose      = Confirm.ask("  Verbose output (print each URL checked)?",   default=True)
@@ -1184,7 +1766,7 @@ def interactive_wizard():
     # ── Scheduler ─────────────────────────────────────────────────────────────
     if mode == "scheduler":
         console.print("\n[bold cyan][ SCHEDULER ][/bold cyan]")
-        interval = float(Prompt.ask("  Scan interval in hours", default="24"))
+        interval = prompt_float("  Scan interval in hours  [e.g. 6, 12, 24]", default=24.0, min_val=0.1, max_val=8760.0)
 
         def target_factory() -> List[str]:
             t = list(manual_targets)
@@ -1240,6 +1822,7 @@ def interactive_wizard():
 
     reporter.print_summary_table()
     reporter.print_findings()
+    reporter.print_page_findings()
     reporter.print_stats()
 
     Path(args.output).mkdir(parents=True, exist_ok=True)
@@ -1256,7 +1839,7 @@ def interactive_wizard():
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="envhunter",
-        description=f"EnvHunter v{VERSION} — .env Exposure & Secrets Recon Framework",
+        description=f"EnvHunter v{VERSION} — Web Exposure & Secrets Recon Framework",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=f"  Author: {AUTHOR}  |  Telegram: {TG_HANDLE}"
     )
@@ -1393,6 +1976,7 @@ def main():
     if not args.quiet:
         reporter.print_summary_table()
         reporter.print_findings()
+        reporter.print_page_findings()
     reporter.print_stats()
 
     Path(args.output).mkdir(parents=True, exist_ok=True)
