@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-╔════════════════════════════════════════════════════════════╗
-║                                                            ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗   ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║   ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║   ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║   ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
-║                                                            ║
-║       .env Exposure & Secrets Recon Framework  v4.1        ║
-║          Author : g33l0  |  Telegram : @x0x0h33l0          ║
-╚════════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗           ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║           ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║           ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║           ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
+║                                                                      ║
+║       .env Exposure & Secrets Recon Framework  v4.2                  ║
+║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
+╚══════════════════════════════════════════════════════════════════════╝
 """
 
 # ── stdlib ────────────────────────────────────────────────────────────────────
@@ -36,15 +36,24 @@ import signal
 
 # ── third-party: caught with helpful messages if missing ─────────────────────
 def _require(pkg, install_name=None):
-    import importlib
+    import importlib, sys, os
     try:
         return importlib.import_module(pkg)
     except ImportError:
         name = install_name or pkg
+        # On Windows, 'python' and 'python3' can point to different installs.
+        # Show both pip and pip3 commands so the user uses the right one.
+        win_note = (
+            "\n  Windows tip: run the pip that matches the python you used to\n"
+            "  launch this script. If 'python envhunter.py' use 'pip install'.\n"
+            "  If 'python3 envhunter.py' use 'pip3 install'.\n"
+            "  Or use: python -m pip install " + name
+        ) if os.name == "nt" else ""
         print(f"\n[ERROR] Missing package '{name}'. Install it with:\n"
               f"        pip install {name}\n"
               f"  or install all requirements:\n"
-              f"        pip install -r requirements.txt\n")
+              f"        pip install -r requirements.txt"
+              + win_note + "\n")
         sys.exit(1)
 
 requests  = _require("requests")
@@ -66,24 +75,24 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.1"
+VERSION   = "4.2"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
 
 BANNER = """[bold cyan]
-╔════════════════════════════════════════════════════════════╗
-║                                                            ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗   ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║   ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║   ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║   ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
-║                                                            ║
-║      [bold white]  .env Exposure & Secrets Recon Framework  v4.1[/bold white][bold cyan]       ║
-║       [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]           ║
-╚════════════════════════════════════════════════════════════╝[/bold cyan]"""
+╔═════════════════════════════════════════════════════════════╗
+║                                                             ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗    ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║    ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║    ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║    ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║    ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ║
+║                                                             ║
+║     [bold white]  .env Exposure & Secrets Recon Framework  v4.2[/bold white][bold cyan]         ║
+║       [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]            ║
+╚═════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
 # ─── SCAN MODULES ─────────────────────────────────────────────────────────────
 # Each module is a named group of paths. The engine checks ALL enabled modules.
@@ -135,7 +144,7 @@ SCAN_MODULES: dict = {
             "/admin/", "/admin/login", "/admin/login.php", "/admin/index.php",
             "/administrator/", "/administrator/index.php",
             "/adminpanel/", "/admin-panel/", "/wp-admin/",
-            "/wp-login.php", "/user/login", "/auth/login",
+            "/user/login", "/auth/login",
             "/backend/", "/backend/login", "/control/",
             "/controlpanel/", "/cp/", "/cpanel/",
             "/manage/", "/management/", "/manager/",
@@ -322,7 +331,6 @@ SCAN_MODULES: dict = {
             "/wp-content/uploads/.htaccess",  # htaccess may be missing, exposing uploads
             "/xmlrpc.php",              # XML-RPC — brute force / info disclosure
             "/?author=1",               # legacy author enumeration
-            "/?author=2",
             "/wp-config-sample.php",    # config sample — may contain real credentials
             "/wp-admin/install.php",    # re-installation page — should be inaccessible post-install
         ],
@@ -355,8 +363,8 @@ SENSITIVE_PATTERNS = {
     "Private Keys/Certs":   r'(?i)(private_key|ssl_key|rsa_key|certificate|pem_file)',
     "Redis / Cache":        r'(?i)(redis_url|redis_pass|redis_host|memcached_pass)',
     "Webhook Secrets":      r'(?i)(webhook_secret|slack_token|discord_token|telegram_bot)',
-    "General Secrets":      r'(?i)(secret|token|key|credential|passwd)[\s]*[=:]+[\s]*[^\s]{6,}',
-    # ── New patterns (v1) ───────────────────────────────────────────────────
+    "General Secrets":      r'(?im)^[A-Z_]*(SECRET|TOKEN|KEY|CREDENTIAL|PASSWD)[A-Z0-9_]*\s*=\s*\S{8,}',
+    # ── Extended patterns (v4.x) ─────────────────────────────────────────────
     "Docker / DevOps":      r'(?i)(docker_pass|registry_pass|ci_token|deploy_key|ansible_pass|vault_token|terraform)',
     "SSH / Private Keys":   r'(?i)(-----BEGIN|RSA PRIVATE|OPENSSH PRIVATE|DSA PRIVATE|EC PRIVATE|ssh-rsa|ssh-ed25519)',
     "Spring Boot Actuator": r'(?i)(spring\.datasource|spring\.security|management\.endpoints)',
@@ -364,7 +372,6 @@ SENSITIVE_PATTERNS = {
     "Laravel App Config":   r'(?i)(APP_KEY=base64|APP_DEBUG=true|APP_ENV=local|cipher=AES)',
     "Database DSN":         r'(?i)(mysql://|postgres://|postgresql://|mongodb://|redis://|sqlite://)',
     "Internal IPs":         r'(?i)(db_host|redis_host|memcached_host|mq_host)[\s]*[=:][\s]*(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)',
-    "Version Disclosure":   r'(?i)(x-powered-by|server:\s*(apache|nginx|iis|php|laravel|express))',
 }
 
 # ── Per-module content signatures ─────────────────────────────────────────────
@@ -528,6 +535,24 @@ FP_MARKERS = [
     r'(?i)^(login|username|password|user|email)\s*$',  # standalone words (not KEY=val)
 ]
 
+# Pre-compiled for performance — avoids repeated re.compile() in hot paths
+# FP_MARKERS: strip per-pattern (?i) flags, apply re.IGNORECASE globally.
+# Joining patterns that each contain (?i) raises re.error on Python 3.6+:
+#   "global flags not at the start of the expression"
+# because only the FIRST sub-pattern in a joined OR may set global flags.
+def _strip_inline_flags(pat: str) -> str:
+    """Remove leading (?iflag) groups so patterns can be safely joined with |"""
+    return re.sub(r"^\(\?[imsxaul]+\)", "", pat)
+
+_FP_RE_COMPILED = re.compile(
+    "|".join(_strip_inline_flags(p) for p in FP_MARKERS),
+    re.IGNORECASE | re.MULTILINE
+)
+# SENSITIVE_PATTERNS: compiled individually so their own inline flags are safe
+_SENS_RE_COMPILED = {cat: re.compile(pat) for cat, pat in SENSITIVE_PATTERNS.items()}
+
+# (Pre-compiled regexes are defined below, after _strip_inline_flags is declared)
+
 USER_AGENTS: List[str] = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 Safari/605.1.15",
@@ -535,6 +560,36 @@ USER_AGENTS: List[str] = [
     "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/121.0",
     "curl/7.88.1",
 ]
+
+
+# ─── TARGET DEDUPLICATION ─────────────────────────────────────────────────────
+def _dedup_targets(targets: list) -> "List[str]":
+    """
+    Deduplicate targets intelligently:
+    - Treats http://x.com and https://x.com as the SAME host (keeps https)
+    - Strips trailing slashes before comparing
+    - Preserves first-occurrence order
+    Real-world: crt.sh returns https://, a user's targets file has http://
+    Without this the same site is scanned twice, doubling noise and load.
+    """
+    from urllib.parse import urlparse as _up
+    seen: dict = {}  # lowercased netloc → canonical URL
+    for raw in targets:
+        url = raw.strip().rstrip("/")
+        if not url:
+            continue
+        try:
+            p = _up(url if "://" in url else "https://" + url)
+            key = p.netloc.lower()
+            if not key:
+                continue
+            if key not in seen:
+                seen[key] = url
+            elif url.startswith("https://") and seen[key].startswith("http://"):
+                seen[key] = url  # upgrade plain http to https
+        except Exception:
+            seen.setdefault(url, url)
+    return list(seen.values())
 
 
 # ─── SAFE ARGS HELPER ─────────────────────────────────────────────────────────
@@ -710,16 +765,47 @@ class StateDB:
                     url         TEXT NOT NULL,
                     risk_level  TEXT NOT NULL,
                     categories  TEXT NOT NULL,
+                    kind        TEXT NOT NULL DEFAULT 'env',
                     first_seen  TEXT NOT NULL,
                     last_seen   TEXT NOT NULL
                 )
             """)
+            # Migrate existing DBs that don't have the kind column yet
+            try:
+                self.conn.execute("ALTER TABLE seen_findings ADD COLUMN kind TEXT NOT NULL DEFAULT 'env'")
+            except Exception:
+                pass  # Column already exists
             self.conn.commit()
 
     def _fp(self, env: ExposedEnv) -> str:
         raw = env.url + "|" + "|".join(sorted(env.findings.keys()))
         return hashlib.sha256(raw.encode()).hexdigest()
 
+    def mark_seen_atomic(self, env: ExposedEnv) -> bool:
+        """
+        Atomically insert the finding and return True if it was NEW.
+        Uses INSERT OR IGNORE so that the first thread to write wins.
+        Checking rowcount inside the same lock eliminates the race condition
+        where two threads both call is_new()→True then both fire Telegram alerts.
+        """
+        fp   = self._fp(env)
+        now  = datetime.utcnow().isoformat()
+        cats = ",".join(env.findings.keys()) or "exposed"
+        with self.lock:
+            cur = self.conn.execute("""
+                INSERT OR IGNORE INTO seen_findings
+                    (fingerprint, url, risk_level, categories, kind, first_seen, last_seen)
+                VALUES (?, ?, ?, ?, 'env', ?, ?)
+            """, (fp, env.url, env.risk_level, cats, now, now))
+            if cur.rowcount == 0:
+                # Row already existed — update last_seen only
+                self.conn.execute(
+                    "UPDATE seen_findings SET last_seen=? WHERE fingerprint=?", (now, fp)
+                )
+            self.conn.commit()
+            return cur.rowcount > 0  # True = new finding, False = already known
+
+    # Backwards-compat aliases used by scan_target
     def is_new(self, env: ExposedEnv) -> bool:
         fp = self._fp(env)
         with self.lock:
@@ -729,21 +815,12 @@ class StateDB:
         return row is None
 
     def mark_seen(self, env: ExposedEnv):
-        fp   = self._fp(env)
-        now  = datetime.utcnow().isoformat()
-        cats = ",".join(env.findings.keys()) or "exposed"
-        with self.lock:
-            self.conn.execute("""
-                INSERT INTO seen_findings (fingerprint,url,risk_level,categories,first_seen,last_seen)
-                VALUES (?,?,?,?,?,?)
-                ON CONFLICT(fingerprint) DO UPDATE SET last_seen=excluded.last_seen
-            """, (fp, env.url, env.risk_level, cats, now, now))
-            self.conn.commit()
+        self.mark_seen_atomic(env)  # delegates; return value discarded
 
     def get_history(self) -> list:
         with self.lock:
             return self.conn.execute(
-                "SELECT url,risk_level,categories,first_seen,last_seen "
+                "SELECT url,risk_level,categories,kind,first_seen,last_seen "
                 "FROM seen_findings ORDER BY first_seen DESC"
             ).fetchall()
 
@@ -759,16 +836,25 @@ class StateDB:
             ).fetchone()
         return row is None
 
-    def mark_seen_page(self, page):
+    def mark_seen_page_atomic(self, page) -> bool:
+        """Atomically record a page finding. Returns True if it was new."""
         fp  = self._fp_page(page)
         now = datetime.utcnow().isoformat()
         with self.lock:
-            self.conn.execute("""
-                INSERT INTO seen_findings (fingerprint,url,risk_level,categories,first_seen,last_seen)
-                VALUES (?,?,?,?,?,?)
-                ON CONFLICT(fingerprint) DO UPDATE SET last_seen=excluded.last_seen
+            cur = self.conn.execute("""
+                INSERT OR IGNORE INTO seen_findings
+                    (fingerprint, url, risk_level, categories, kind, first_seen, last_seen)
+                VALUES (?, ?, ?, ?, 'page', ?, ?)
             """, (fp, page.url, page.risk_level, page.label, now, now))
+            if cur.rowcount == 0:
+                self.conn.execute(
+                    "UPDATE seen_findings SET last_seen=? WHERE fingerprint=?", (now, fp)
+                )
             self.conn.commit()
+            return cur.rowcount > 0
+
+    def mark_seen_page(self, page):
+        self.mark_seen_page_atomic(page)
 
     def close(self):
         try:
@@ -1065,10 +1151,22 @@ class EnvHunter:
             self.notifier = TelegramNotifier(self.args.tg_token, self.args.tg_chat)
 
     def _build_session(self) -> requests.Session:
+        from requests.adapters import HTTPAdapter
+        from urllib3.util.retry import Retry
         s = requests.Session()
         if self.args.proxy:
             s.proxies = {"http": self.args.proxy, "https": self.args.proxy}
         s.verify = False
+        # Connection pooling: large pool for many concurrent threads
+        # Retry once on connection reset / transient errors (not on 4xx/5xx)
+        retry = Retry(total=1, connect=1, read=0, status=0, raise_on_status=False)
+        adapter = HTTPAdapter(
+            pool_connections=20,
+            pool_maxsize=max(self.args.threads, 20),
+            max_retries=retry,
+        )
+        s.mount("http://",  adapter)
+        s.mount("https://", adapter)
         return s
 
     def _headers(self) -> dict:
@@ -1085,27 +1183,54 @@ class EnvHunter:
         return h
 
     def _normalize(self, target: str) -> str:
+        """
+        Normalise a target URL to a bare origin: scheme://host[:port]
+        Strip any path components the user accidentally included.
+        Example: https://example.com/app/v2 → https://example.com
+        This ensures every path in SCAN_MODULES is appended to the root.
+        """
         t = target.strip()
+        # Ensure scheme is present so urllib can parse it
         if not t.startswith(("http://", "https://")):
             t = "https://" + t
-        return t.rstrip("/")
+        # Strip path, query, fragment — we only want origin
+        from urllib.parse import urlparse as _up
+        p = _up(t)
+        origin = f"{p.scheme}://{p.netloc}"
+        # Preserve non-standard ports (already in netloc)
+        return origin.rstrip("/")
 
     def _looks_like_env(self, text: str) -> bool:
+        # Strip BOM (Byte Order Mark) — Windows editors add \ufeff to files.
+        # Without stripping it, the HTML check and KEY=VALUE scan both fail
+        # on the first character of an otherwise valid .env file.
+        text = text.lstrip('\ufeff\ufffe\xef\xbb\xbf')
         # Reject HTML pages immediately
         if re.search(r'<html|<body|<!doctype', text[:500], re.IGNORECASE):
             return False
-        # Reject JSON responses (APIs, configs served as JSON)
+        # Reject pure JSON responses — but ONLY if the entire body is JSON.
+        # Do NOT reject .env files that happen to have a JSON-like first line
+        # (e.g. corrupted files, merged configs). Check if the whole body
+        # parses as JSON, not just if the first char is '{' or '['.
         stripped = text.strip()
         if stripped.startswith(('{', '[')):
-            return False
+            try:
+                import json as _json
+                _json.loads(stripped)
+                # Successfully parsed as pure JSON — not an .env file
+                return False
+            except Exception:
+                # Failed to parse — may be a .env with a JSON-looking first line
+                # Don't reject it; let the KEY=VALUE scan below decide.
+                pass
         # Require at least 2 KEY=VALUE lines where VALUE is non-empty and non-trivial.
-        # A "KEY=" with no value, or "KEY=null", or "KEY=false" is not a secret.
-        # We count only lines that have an actual value after the = sign.
+        # KEY must be at least 1 char (changed from {2,} which required 3+, causing
+        # keys like 'DB=', 'PW=' to be completely invisible to the scanner).
         real_kv = re.findall(
-            r'^[A-Z_][A-Z0-9_]{2,}\s*=\s*[^\s#\n][^\n]{0,}',
+            r'^[A-Z_][A-Z0-9_]*\s*=\s*[^\s#\n][^\n]{0,}',
             text, re.MULTILINE
         )
-        # Filter out lines that are just placeholders
+        # Filter out lines that are placeholder values, not real secrets
         actual = [
             ln for ln in real_kv
             if not re.search(
@@ -1117,7 +1242,7 @@ class EnvHunter:
         return len(actual) >= 2
 
     def _is_fp(self, line: str) -> bool:
-        return any(re.search(p, line) for p in FP_MARKERS)
+        return bool(_FP_RE_COMPILED.search(line))
 
     def _extract_findings(self, content: str) -> dict:
         findings: dict = {}
@@ -1125,11 +1250,12 @@ class EnvHunter:
             line = line.strip()
             if not line or self._is_fp(line):
                 continue
-            for cat, pat in SENSITIVE_PATTERNS.items():
-                if re.search(pat, line):
+            for cat, _cre in _SENS_RE_COMPILED.items():
+                if _cre.search(line):
                     display = line
                     if self.args.redact:
-                        display = re.sub(r'(=\s*)(.{3}).+', r'\1\2****[REDACTED]', line)
+                        # Redact: keep key name, hide entire value — never expose any chars
+                        display = re.sub(r'(=\s*)(.+)', r'\1****[REDACTED]', line)
                     findings.setdefault(cat, [])
                     if display not in findings[cat]:
                         findings[cat].append(display)
@@ -1153,7 +1279,7 @@ class EnvHunter:
             resp = self.session.get(
                 url, headers=self._headers(),
                 allow_redirects=False,
-                timeout=self.args.timeout
+                timeout=(5, self.args.timeout),  # (connect_timeout, read_timeout)
             )
             if resp.status_code not in (200, 206):
                 return None
@@ -1177,7 +1303,9 @@ class EnvHunter:
             if not self._looks_like_env(content):
                 return None
 
-            env = ExposedEnv(url, resp.status_code, len(content), ct)
+            # Use byte length for accurate size reporting (matches HTTP Content-Length)
+            byte_len = len(resp.content)
+            env = ExposedEnv(url, resp.status_code, byte_len, ct)
             env.raw_content = content
             env.findings    = self._extract_findings(content)
             env.risk_level  = self._risk_level(env.findings)
@@ -1232,7 +1360,7 @@ class EnvHunter:
                 url,
                 headers=self._headers(),
                 allow_redirects=(module in redirect_ok),
-                timeout=self.args.timeout
+                timeout=(5, self.args.timeout),  # (connect_timeout, read_timeout)
             )
 
             # Only accept direct 200/206 — redirects mean the resource is
@@ -1331,7 +1459,7 @@ class EnvHunter:
                     return None
 
             label            = SCAN_MODULES.get(module, {}).get("label", module)
-            page             = ExposedPage(url, resp.status_code, len(content),
+            page             = ExposedPage(url, resp.status_code, len(resp.content),
                                            module, label, evidence)
             page.risk_level  = self._page_risk(module)
             page.raw_snippet = content[:500]
@@ -1365,8 +1493,7 @@ class EnvHunter:
             env = self._fetch_url(url)
             if env:
                 result.exposed_envs.append(env)
-                is_new = self.state_db.is_new(env)
-                self.state_db.mark_seen(env)
+                is_new = self.state_db.mark_seen_atomic(env)
 
                 if self.args.verbose:
                     rc    = {"CRITICAL": "red", "HIGH": "yellow",
@@ -1374,7 +1501,7 @@ class EnvHunter:
                     badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
                     console.print(f"  {badge}[bold {rc}]✓ .env [{env.risk_level}] {url}[/bold {rc}]")
 
-                if self.notifier and is_new:
+                if self.notifier and is_new and env.risk_level != "LOW":
                     self.notifier.send_finding(env, target, is_new=True)
                     with self.lock:
                         self.stats["new_findings"] += 1
@@ -1382,7 +1509,7 @@ class EnvHunter:
             if self.args.delay:
                 time.sleep(random.uniform(self.args.delay * 0.5, self.args.delay))
 
-        # ── Phase 2: Web exposure scanning (new in v4.1) ───────────────────
+        # ── Phase 2: Web exposure scanning (added v4.0) ─────────────────────
         for mod_key, mod_cfg in SCAN_MODULES.items():
             if mod_key == "env_files":
                 continue  # already handled above
@@ -1394,8 +1521,7 @@ class EnvHunter:
                 page = self._fetch_page(url, mod_key)
                 if page:
                     result.exposed_pages.append(page)
-                    is_new = self.state_db.is_new_page(page)
-                    self.state_db.mark_seen_page(page)
+                    is_new = self.state_db.mark_seen_page_atomic(page)
 
                     if self.args.verbose:
                         rc    = {"CRITICAL": "red", "HIGH": "yellow",
@@ -1405,7 +1531,7 @@ class EnvHunter:
                             f"  {badge}[bold {rc}]✓ {page.label} [{page.risk_level}] {url}[/bold {rc}]"
                         )
 
-                    if self.notifier and is_new:
+                    if self.notifier and is_new and page.risk_level not in ("LOW",):
                         self.notifier.send_page_finding(page, target)
                         with self.lock:
                             self.stats["new_findings"] += 1
@@ -1437,7 +1563,7 @@ class EnvHunter:
                             self.results.append(result)
                             self.stats["scanned"] += 1
                             if result.exposed_envs:
-                                self.stats["exposed"] += 1
+                                self.stats["exposed"] += len(result.exposed_envs)
                                 for env in result.exposed_envs:
                                     if env.risk_level == "CRITICAL":
                                         self.stats["critical"] += 1
@@ -1760,6 +1886,14 @@ class Reporter:
     a{{color:#58a6ff;text-decoration:none}}
     a:hover{{text-decoration:underline}}
     code{{background:#161b22;padding:1px 4px;border-radius:3px;font-size:.85em}}
+    .stats-bar{{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0 24px;justify-content:center}}
+    .stat{{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px 20px;text-align:center;min-width:90px}}
+    .stat.critical{{border-color:#7f1d1d}}
+    .stat.high{{border-color:#78350f}}
+    .stat-val{{display:block;font-size:1.6rem;font-weight:bold;color:#58a6ff}}
+    .stat.critical .stat-val{{color:#fca5a5}}
+    .stat.high .stat-val{{color:#fcd34d}}
+    .stat-lbl{{display:block;font-size:.75rem;color:#8b949e;margin-top:2px;text-transform:uppercase;letter-spacing:.05em}}
   </style>
 </head>
 <body>
@@ -1767,6 +1901,13 @@ class Reporter:
   <p class="meta">
     By {AUTHOR} | {TG_HANDLE} | Generated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}
   </p>
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-num">{self.stats.get("scanned",0)}</div><div class="stat-lbl">Targets Scanned</div></div>
+    <div class="stat-card crit"><div class="stat-num">{self.stats.get("exposed",0)}</div><div class="stat-lbl">.env Exposed</div></div>
+    <div class="stat-card high"><div class="stat-num">{self.stats.get("pages_found",0)}</div><div class="stat-lbl">Web Exposures</div></div>
+    <div class="stat-card crit"><div class="stat-num">{self.stats.get("critical",0)}</div><div class="stat-lbl">Critical Risk</div></div>
+    <div class="stat-card"><div class="stat-num">{self.stats.get("new_findings",0)}</div><div class="stat-lbl">New Findings</div></div>
+  </div>
   <h2 style="color:#58a6ff;margin:20px 0 10px">.env File Exposures</h2>
   <table>
     <thead>
@@ -1825,15 +1966,22 @@ class ScheduledRunner:
         results  = hunter.run(targets)
         reporter = Reporter(results, hunter.stats, self.args)
         reporter.print_summary_table()
-        reporter.print_page_findings()
+        reporter.print_findings()        # .env file exposures
+        reporter.print_page_findings()   # web exposures
         reporter.print_stats()
 
         out_dir = self.args.output
         Path(out_dir).mkdir(parents=True, exist_ok=True)
         base = os.path.join(out_dir, f"scheduled_{ts}")
-        reporter.save_json(base + ".json")
-        reporter.save_txt(base  + ".txt")
-        reporter.save_html(base + ".html")
+        # Respect output flags — save only what the user asked for
+        if self.args.json or self.args.all_reports: reporter.save_json(base + ".json")
+        if self.args.txt  or self.args.all_reports: reporter.save_txt(base  + ".txt")
+        if self.args.html or self.args.all_reports: reporter.save_html(base + ".html")
+        # If no output flags set, default to saving all for scheduled runs
+        if not (self.args.json or self.args.txt or self.args.html or self.args.all_reports):
+            reporter.save_json(base + ".json")
+            reporter.save_txt(base  + ".txt")
+            reporter.save_html(base + ".html")
         hunter.close()
 
     def start(self, interval_hours: float):
@@ -1869,12 +2017,34 @@ class ScheduledRunner:
 
 # ─── HELPERS ──────────────────────────────────────────────────────────────────
 def _load_targets_file(path: str) -> List[str]:
+    """Load and validate targets file. Warns on bad lines without aborting."""
     if not os.path.isfile(path):
         console.print(f"[red]  [!] File not found: {path}[/red]")
         sys.exit(1)
-    with open(path, encoding="utf-8", errors="replace") as f:
-        return [l.strip() for l in f if l.strip() and not l.startswith("#")]
-
+    from urllib.parse import urlparse as _urlparse
+    valid = []
+    skipped = 0
+    with open(path, encoding="utf-8", errors="replace") as fh:
+        for lineno, raw in enumerate(fh, 1):
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+            if " " in line or "\t" in line:
+                console.print(f"[yellow]  [!] Line {lineno} skipped (whitespace in URL): {line!r}[/yellow]")
+                skipped += 1
+                continue
+            candidate = line if "://" in line else "https://" + line
+            try:
+                p = _urlparse(candidate)
+                if p.scheme not in ("http", "https") or not p.netloc:
+                    raise ValueError("bad scheme or host")
+                valid.append(line)
+            except Exception:
+                console.print(f"[yellow]  [!] Line {lineno} skipped (invalid URL): {line}[/yellow]")
+                skipped += 1
+    if skipped:
+        console.print(f"[yellow]  [!] {skipped} line(s) skipped from {path}[/yellow]")
+    return valid
 
 def _print_history():
     db   = StateDB(DB_PATH)
@@ -1887,14 +2057,30 @@ def _print_history():
         title="[bold cyan]Historical Findings[/bold cyan]",
         box=box.SIMPLE_HEAVY, border_style="cyan", show_lines=True
     )
-    t.add_column("URL",        style="cyan",        no_wrap=False, max_width=60)
+    t.add_column("Type",       justify="center",    min_width=10)
+    t.add_column("URL",        style="cyan",        no_wrap=False, max_width=55)
     t.add_column("Risk",       justify="center",    min_width=8)
-    t.add_column("Categories", style="yellow",      no_wrap=False)
+    t.add_column("Category / Label",  style="yellow", no_wrap=False, max_width=28)
     t.add_column("First Seen", min_width=19)
     t.add_column("Last Seen",  min_width=19)
     for row in rows:
-        rc = RISK_COLORS.get(row[1], "white")
-        t.add_row(row[0], f"[{rc}]{row[1]}[/{rc}]", row[2], row[3][:19], row[4][:19])
+        url, risk, cats, first_seen, last_seen = row[0], row[1], row[2], row[3], row[4]
+        rc = RISK_COLORS.get(risk, "white")
+        # Detect whether this row is a .env finding or a web exposure:
+        # mark_seen() stores finding category names (e.g. "Database Credentials,API Keys")
+        # mark_seen_page() stores the page label (e.g. "Git / VCS Exposure", "phpMyAdmin")
+        # .env categories always contain a comma OR match known category names
+        env_cats = {
+            "Database Credentials","API Keys","Cloud Credentials","Auth / JWT Secrets",
+            "Passwords","SMTP / Mail","OAuth / SSO","Stripe / Payment","Twilio / SMS",
+            "Private Keys/Certs","Redis / Cache","Webhook Secrets","General Secrets",
+            "Docker / DevOps","SSH / Private Keys","Spring Boot Actuator","WordPress Secrets",
+            "Laravel App Config","Database DSN","Internal IPs","Version Disclosure","Usernames",
+            "exposed",
+        }
+        is_env = any(c.strip() in env_cats for c in cats.split(","))
+        type_label = "[bold green].env File[/bold green]" if is_env else "[bold cyan]Web Exposure[/bold cyan]"
+        t.add_row(type_label, url, f"[{rc}]{risk}[/{rc}]", cats[:40], first_seen[:19], last_seen[:19])
     console.print(t)
 
 
@@ -1902,7 +2088,7 @@ def _print_history():
 def interactive_wizard():
     console.print(BANNER)
     console.print(Panel(
-        "[bold white]EnvHunter v4.1 — Web Exposure & Secrets Recon Framework[/bold white]\n"
+        f"[bold white]EnvHunter v{VERSION} — Web Exposure & Secrets Recon Framework[/bold white]\n"
         "[dim]Authorized use only. Scan only systems you own or have explicit permission to test.[/dim]",
         border_style="cyan"
     ))
@@ -1928,10 +2114,24 @@ def interactive_wizard():
     inp = Prompt.ask("  Input method", choices=["single", "file"], default="single")
     manual_targets: List[str] = []
     if inp == "single":
+        from urllib.parse import urlparse as _wup
         while True:
-            t = Prompt.ask("  Enter target URL (e.g. https://example.com)")
-            if t.strip():
-                manual_targets.append(t.strip())
+            raw_t = Prompt.ask("  Enter target URL (e.g. https://example.com)").strip()
+            if not raw_t:
+                console.print("  [yellow]  Please enter a URL.[/yellow]")
+                continue
+            if " " in raw_t or "\t" in raw_t:
+                console.print("  [yellow]  URL cannot contain spaces.[/yellow]")
+                continue
+            _cand = raw_t if "://" in raw_t else "https://" + raw_t
+            try:
+                _pp = _wup(_cand)
+                if _pp.scheme not in ("http", "https") or not _pp.netloc:
+                    raise ValueError()
+            except Exception:
+                console.print(f"  [yellow]  Invalid URL: {raw_t!r} — try https://example.com[/yellow]")
+                continue
+            manual_targets.append(raw_t)
             if not Confirm.ask("  Add another target?", default=False):
                 break
     else:
@@ -1983,12 +2183,17 @@ def interactive_wizard():
     )
     args.redact       = Confirm.ask("  Redact secret values in all output?",        default=False)
     args.aggressive   = Confirm.ask("  Aggressive mode (check all content types)?", default=False)
-    args.verbose      = Confirm.ask("  Verbose output (print each URL checked)?",   default=True)
+    args.verbose      = Confirm.ask("  Verbose output (print each URL checked)?",   default=False)
     args.show_content = Confirm.ask("  Print raw .env content in terminal?",        default=False)
 
-    proxy_raw = Prompt.ask("  Proxy URL (leave blank to skip)", default="")
+    proxy_raw = Prompt.ask("  Proxy URL (leave blank to skip)  e.g. http://127.0.0.1:8080", default="")
     if proxy_raw.strip():
-        args.proxy = proxy_raw.strip()
+        px = proxy_raw.strip()
+        # Auto-add http:// scheme if user typed just host:port
+        if px and not px.startswith(("http://", "https://", "socks5://", "socks4://")):
+            px = "http://" + px
+            console.print(f"  [dim]  Proxy normalised to: {px}[/dim]")
+        args.proxy = px
 
     # ── Telegram ──────────────────────────────────────────────────────────────
     console.print("\n[bold cyan][ TELEGRAM ALERTS ][/bold cyan]")
@@ -2022,7 +2227,7 @@ def interactive_wizard():
                     shodan_queries=args._shodan_queries,
                     censys_queries=args._censys_queries,
                 )
-            return list(set(t))
+            return _dedup_targets(t)
 
         runner = ScheduledRunner(args, target_factory)
         runner.start(interval)
@@ -2037,7 +2242,7 @@ def interactive_wizard():
             shodan_queries=args._shodan_queries,
             censys_queries=args._censys_queries,
         )
-        all_targets = list(set(all_targets))
+        all_targets = _dedup_targets(all_targets)
 
     if not all_targets:
         console.print("[red]  No targets to scan. Exiting.[/red]")
@@ -2188,7 +2393,7 @@ def main():
                 shodan_queries=shodan_queries,
                 censys_queries=censys_queries,
             )
-        return list(set(t))
+        return _dedup_targets(t)
 
     # ── Scheduler ─────────────────────────────────────────────────────────────
     if args.schedule:
