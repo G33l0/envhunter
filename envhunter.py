@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-╔══════════════════════════════════════════════════════════════╗
-║                                                              ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗     ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║     ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║     ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║     ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║     ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝     ║
-║                                                              ║
-║       .env Exposure & Secrets Recon Framework  v4.2          ║
-║          Author : g33l0  |  Telegram : @x0x0h33l0            ║
-╚══════════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗           ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║           ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║           ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║           ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
+║                                                                      ║
+║       .env Exposure & Secrets Recon Framework  v4.2                  ║
+║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
+╚══════════════════════════════════════════════════════════════════════╝
 """
 
 # ── stdlib ────────────────────────────────────────────────────────────────────
@@ -26,7 +26,7 @@ import hashlib
 import sqlite3
 import argparse
 import threading
-from datetime import datetime
+from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Optional, List
@@ -81,18 +81,18 @@ TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
 
 BANNER = """[bold cyan]
-╔═══════════════════════════════════════════════════════════╗
-║                                                           ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗  ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║  ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║  ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║  ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║  ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝  ║
-║                                                           ║  
-║    [bold white]  .env Exposure & Secrets Recon Framework  v4.2[/bold white][bold cyan]        ║
-║      [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]           ║
-╚═══════════════════════════════════════════════════════════╝[/bold cyan]"""
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗   ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║   ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║   ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║   ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
+║                                                            ║
+║    [bold white]  .env Exposure & Secrets Recon Framework  v4.2[/bold white][bold cyan]         ║
+║     [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]             ║
+╚════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
 # ─── SCAN MODULES ─────────────────────────────────────────────────────────────
 # Each module is a named group of paths. The engine checks ALL enabled modules.
@@ -669,7 +669,7 @@ class ExposedPage:
 class ScanResult:
     def __init__(self, target: str):
         self.target          = target
-        self.timestamp       = datetime.utcnow().isoformat()
+        self.timestamp       = datetime.now(timezone.utc).isoformat()
         self.exposed_envs:  List[ExposedEnv]  = []
         self.exposed_pages: List[ExposedPage] = []   # NEW
         self.scan_status     = "pending"
@@ -789,7 +789,7 @@ class StateDB:
         where two threads both call is_new()→True then both fire Telegram alerts.
         """
         fp   = self._fp(env)
-        now  = datetime.utcnow().isoformat()
+        now  = datetime.now(timezone.utc).isoformat()
         cats = ",".join(env.findings.keys()) or "exposed"
         with self.lock:
             cur = self.conn.execute("""
@@ -839,7 +839,7 @@ class StateDB:
     def mark_seen_page_atomic(self, page) -> bool:
         """Atomically record a page finding. Returns True if it was new."""
         fp  = self._fp_page(page)
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(timezone.utc).isoformat()
         with self.lock:
             cur = self.conn.execute("""
                 INSERT OR IGNORE INTO seen_findings
@@ -1089,7 +1089,7 @@ class TelegramNotifier:
             f"🎯 <b>Target:</b> <code>{target}</code>\n"
             f"🔗 <b>URL:</b> <code>{env.url}</code>\n"
             f"📊 <b>HTTP:</b> {env.status_code}  |  📏 <b>Size:</b> {env.content_length}B\n"
-            f"🕐 <b>Time:</b> {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}\n"
+            f"🕐 <b>Time:</b> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n"
             f"\n🔑 <b>Secrets Detected:</b>\n{cats}\n"
             f"\n<i>EnvHunter v{VERSION} | {AUTHOR} | {TG_HANDLE}</i>"
         )
@@ -1104,7 +1104,7 @@ class TelegramNotifier:
             f"🌐 Pages Exposed   : <b>{stats.get('pages_found',0)}</b>\n"
             f"🔴 Critical        : <b>{stats.get('critical',0)}</b>\n"
             f"🆕 New Findings    : <b>{stats.get('new_findings',0)}</b>\n"
-            f"🕐 Completed       : {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}\n"
+            f"🕐 Completed       : {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n"
             f"\n<i>EnvHunter v{VERSION} | {AUTHOR} | {TG_HANDLE}</i>"
         )
         return self._send(msg)
@@ -1120,7 +1120,7 @@ class TelegramNotifier:
             f"🔗 <b>URL:</b> <code>{page.url}</code>\n"
             f"📂 <b>Type:</b> {page.label}\n"
             f"📊 <b>HTTP:</b> {page.status_code}  |  📏 <b>Size:</b> {page.content_length}B\n"
-            f"🕐 <b>Time:</b> {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}\n"
+            f"🕐 <b>Time:</b> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n"
             f"\n🔍 <b>Evidence:</b>\n{ev}\n"
             f"\n<i>EnvHunter v{{VERSION}} | {AUTHOR} | {TG_HANDLE}</i>"
         ).replace("{VERSION}", VERSION)
@@ -1507,7 +1507,7 @@ class EnvHunter:
                         self.stats["new_findings"] += 1
 
             if self.args.delay:
-                time.sleep(random.uniform(self.args.delay * 0.5, self.args.delay))
+                time.sleep(random.uniform(0.05, min(0.2, self.args.delay)))
 
         # ── Phase 2: Web exposure scanning (added v4.0) ─────────────────────
         for mod_key, mod_cfg in SCAN_MODULES.items():
@@ -1537,7 +1537,7 @@ class EnvHunter:
                             self.stats["new_findings"] += 1
 
                 if self.args.delay:
-                    time.sleep(random.uniform(self.args.delay * 0.5, self.args.delay))
+                    time.sleep(random.uniform(0.05, min(0.2, self.args.delay)))
 
         result.scan_status = "done"
         return result
@@ -1558,7 +1558,11 @@ class EnvHunter:
                 futures = {executor.submit(self.scan_target, t): t for t in targets}
                 for future in as_completed(futures):
                     try:
-                        result = future.result()
+                        # Hard per-target timeout: prevents a single black-hole
+                        # host from hanging the entire scan indefinitely.
+                        # 14 modules × timeout × 2 = generous ceiling per target.
+                        _tgt_timeout = max(120, 14 * self.args.timeout * 2)
+                        result = future.result(timeout=_tgt_timeout)
                         with self.lock:
                             self.results.append(result)
                             self.stats["scanned"] += 1
@@ -1576,10 +1580,21 @@ class EnvHunter:
                     except Exception as e:
                         with self.lock:
                             self.stats["errors"] += 1
-                        if self.args.verbose:
+                        _tgt = futures.get(future, "unknown")
+                        if type(e).__name__ in ("TimeoutError", "CancelledError"):
+                            console.print(
+                                f"[yellow]  [!] Target abandoned (no response): {_tgt}[/yellow]"
+                            )
+                        elif self.args.verbose:
                             console.print(f"[red]  [!] Scan error: {e}[/red]")
                     finally:
                         progress.advance(task)
+                        # Inter-TARGET delay: the full stealth delay now applies
+                        # BETWEEN targets, not between each of 280 paths within one.
+                        if self.args.delay:
+                            time.sleep(random.uniform(
+                                self.args.delay * 0.5, self.args.delay
+                            ))
 
         if self.notifier:
             self.notifier.send_summary(self.stats)
@@ -1771,7 +1786,7 @@ class Reporter:
         try:
             with open(path, "w", encoding="utf-8") as f:
                 f.write(f"EnvHunter v{VERSION} | {AUTHOR} | {TG_HANDLE}\n")
-                f.write(f"Date: {datetime.utcnow().isoformat()} UTC\n")
+                f.write(f"Date: {datetime.now(timezone.utc).isoformat()} UTC\n")
                 f.write("=" * 70 + "\n\n")
                 exposed_count = 0
                 for r in self.results:
@@ -1899,7 +1914,7 @@ class Reporter:
 <body>
   <h1>🔍 EnvHunter Report</h1>
   <p class="meta">
-    By {AUTHOR} | {TG_HANDLE} | Generated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}
+    By {AUTHOR} | {TG_HANDLE} | Generated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}
   </p>
   <div class="stats-bar">
     <div class="stat"><span class="stat-val">{self.stats.get("scanned",0)}</span><span class="stat-lbl">Targets Scanned</span></div>
@@ -2162,11 +2177,11 @@ def interactive_wizard():
         default=10, min_val=1, max_val=100
     )
     args.timeout = prompt_int(
-        "  Request timeout seconds   [recommended: 10]",
-        default=10, min_val=1, max_val=120
+        "  Request timeout (s)       [5=fast | 8=balanced | 15=thorough]",
+        default=8, min_val=1, max_val=120
     )
     args.delay = prompt_float(
-        "  Delay between requests    [0=none | 0.5=safe | 1=stealth]",
+        "  Delay between TARGETS     [0=fast | 0.5=polite | 1=stealth]",
         default=0.0, min_val=0.0, max_val=60.0
     )
     args.redact       = Confirm.ask("  Redact secret values in all output?",        default=False)
