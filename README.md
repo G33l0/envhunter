@@ -1,8 +1,8 @@
-# 🔍 EnvHunter v4.0
+# 🔍 EnvHunter v4.2
 
 > **Web Exposure & Secrets Recon Framework**  
 > **Author:** g33l0 | **Telegram:** @x0x0h33l0  
-> **Version:** 4.1
+> **Version:** 4.2
 
 ---
 
@@ -15,7 +15,7 @@
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║     ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ║
 ╚════════════════════════════════════════════════════════════╝
-  Web Exposure & Secrets Recon Framework  v4.1
+  Web Exposure & Secrets Recon Framework  v4.2
   Author : g33l0  |  Telegram : @x0x0h33l0
 ```
 
@@ -167,9 +167,9 @@ python3 envhunter.py -u https://example.com --proxy http://127.0.0.1:8080
 
 ---
 
-## 📦 Scan Modules (v4.0)
+## 📦 Scan Modules (v4.2)
 
-EnvHunter v4.0 uses a named module system. Each module covers a specific exposure category with its own path list, content signatures, and default risk level.
+EnvHunter v4.2 uses a named module system. Each module covers a specific exposure category with its own path list, content signatures, and default risk level.
 
 | Module | Paths | Default Risk | What It Detects |
 |---|---|---|---|
@@ -436,6 +436,9 @@ python3 envhunter.py -u https://target.com --discover target.com --threads 5 --d
 
 ## 📋 Changelog
 
+### v4.2
+- Major bugs fixed
+- 
 ### v4.1
 - Fixed 7 known bugs
   
