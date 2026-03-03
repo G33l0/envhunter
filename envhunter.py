@@ -81,18 +81,18 @@ TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
 
 BANNER = """[bold cyan]
-╔═════════════════════════════════════════════════════════════╗
-║                                                             ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗    ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║    ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║    ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║    ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║    ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ║
-║                                                             ║
-║     [bold white]  .env Exposure & Secrets Recon Framework  v4.2[/bold white][bold cyan]         ║
-║       [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]            ║
-╚═════════════════════════════════════════════════════════════╝[/bold cyan]"""
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗  ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║  ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║  ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║  ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║  ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝  ║
+║                                                           ║  
+║    [bold white]  .env Exposure & Secrets Recon Framework  v4.2[/bold white][bold cyan]        ║
+║      [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]           ║
+╚═══════════════════════════════════════════════════════════╝[/bold cyan]"""
 
 # ─── SCAN MODULES ─────────────────────────────────────────────────────────────
 # Each module is a named group of paths. The engine checks ALL enabled modules.
@@ -1902,11 +1902,11 @@ class Reporter:
     By {AUTHOR} | {TG_HANDLE} | Generated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}
   </p>
   <div class="stats-bar">
-    <div class="stat-card"><div class="stat-num">{self.stats.get("scanned",0)}</div><div class="stat-lbl">Targets Scanned</div></div>
-    <div class="stat-card crit"><div class="stat-num">{self.stats.get("exposed",0)}</div><div class="stat-lbl">.env Exposed</div></div>
-    <div class="stat-card high"><div class="stat-num">{self.stats.get("pages_found",0)}</div><div class="stat-lbl">Web Exposures</div></div>
-    <div class="stat-card crit"><div class="stat-num">{self.stats.get("critical",0)}</div><div class="stat-lbl">Critical Risk</div></div>
-    <div class="stat-card"><div class="stat-num">{self.stats.get("new_findings",0)}</div><div class="stat-lbl">New Findings</div></div>
+    <div class="stat"><span class="stat-val">{self.stats.get("scanned",0)}</span><span class="stat-lbl">Targets Scanned</span></div>
+    <div class="stat critical"><span class="stat-val">{self.stats.get("exposed",0)}</span><span class="stat-lbl">.env Exposed</span></div>
+    <div class="stat high"><span class="stat-val">{self.stats.get("pages_found",0)}</span><span class="stat-lbl">Web Exposures</span></div>
+    <div class="stat critical"><span class="stat-val">{self.stats.get("critical",0)}</span><span class="stat-lbl">Critical Risk</span></div>
+    <div class="stat"><span class="stat-val">{self.stats.get("new_findings",0)}</span><span class="stat-lbl">New Findings</span></div>
   </div>
   <h2 style="color:#58a6ff;margin:20px 0 10px">.env File Exposures</h2>
   <table>
@@ -2064,22 +2064,10 @@ def _print_history():
     t.add_column("First Seen", min_width=19)
     t.add_column("Last Seen",  min_width=19)
     for row in rows:
-        url, risk, cats, first_seen, last_seen = row[0], row[1], row[2], row[3], row[4]
+        url, risk, cats, kind, first_seen, last_seen = row[0], row[1], row[2], row[3], row[4], row[5]
         rc = RISK_COLORS.get(risk, "white")
-        # Detect whether this row is a .env finding or a web exposure:
-        # mark_seen() stores finding category names (e.g. "Database Credentials,API Keys")
-        # mark_seen_page() stores the page label (e.g. "Git / VCS Exposure", "phpMyAdmin")
-        # .env categories always contain a comma OR match known category names
-        env_cats = {
-            "Database Credentials","API Keys","Cloud Credentials","Auth / JWT Secrets",
-            "Passwords","SMTP / Mail","OAuth / SSO","Stripe / Payment","Twilio / SMS",
-            "Private Keys/Certs","Redis / Cache","Webhook Secrets","General Secrets",
-            "Docker / DevOps","SSH / Private Keys","Spring Boot Actuator","WordPress Secrets",
-            "Laravel App Config","Database DSN","Internal IPs","Version Disclosure","Usernames",
-            "exposed",
-        }
-        is_env = any(c.strip() in env_cats for c in cats.split(","))
-        type_label = "[bold green].env File[/bold green]" if is_env else "[bold cyan]Web Exposure[/bold cyan]"
+        # Use the 'kind' column written by mark_seen_atomic ('env') / mark_seen_page_atomic ('page')
+        type_label = "[bold green].env File[/bold green]" if kind == "env" else "[bold cyan]Web Exposure[/bold cyan]"
         t.add_row(type_label, url, f"[{rc}]{risk}[/{rc}]", cats[:40], first_seen[:19], last_seen[:19])
     console.print(t)
 
