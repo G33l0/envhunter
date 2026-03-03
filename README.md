@@ -2,7 +2,7 @@
 
 > **Web Exposure & Secrets Recon Framework**  
 > **Author:** g33l0 | **Telegram:** @x0x0h33l0  
-> **Version:** 4.0
+> **Version:** 4.1
 
 ---
 
@@ -15,7 +15,7 @@
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║     ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ║
 ╚════════════════════════════════════════════════════════════╝
-  Web Exposure & Secrets Recon Framework  v4.0
+  Web Exposure & Secrets Recon Framework  v4.1
   Author : g33l0  |  Telegram : @x0x0h33l0
 ```
 
@@ -25,11 +25,11 @@
 
 **EnvHunter** is a professional web exposure scanner for security teams to proactively audit their entire web infrastructure before attackers can exploit accidentally exposed resources.
 
-**v4.0 expands far beyond `.env` files.** The tool now detects 14 categories of exposure across 280+ paths — covering `.env` secrets, phpMyAdmin, admin panels, database dumps, Git repositories, SSH keys, debug pages, config files, log files, Docker/DevOps files, WordPress misconfigurations, API documentation, and server status pages.
+**v4.1 expands far beyond `.env` files.** The tool now detects 14 categories of exposure across 280+ paths — covering `.env` secrets, phpMyAdmin, admin panels, database dumps, Git repositories, SSH keys, debug pages, config files, log files, Docker/DevOps files, WordPress misconfigurations, API documentation, and server status pages.
 
 **v3.x brought:** Shodan/Censys/crt.sh/HackerTarget/OTX asset discovery, Telegram alerting with SQLite deduplication, and a built-in scheduler.
 
-**v4.0 adds:** 13 new scan modules, smart signature validation to eliminate false positives, dual-phase scan engine, expanded detection patterns (22 categories), and a second report table for web exposure findings.
+**v4.1 adds:** 13 new scan modules, smart signature validation to eliminate false positives, dual-phase scan engine, expanded detection patterns (22 categories), and a second report table for web exposure findings.
 
 ---
 
@@ -436,6 +436,9 @@ python3 envhunter.py -u https://target.com --discover target.com --threads 5 --d
 
 ## 📋 Changelog
 
+### v4.1
+- Fixed 7 known bugs
+  
 ### v4.0
 - 14 scan modules — expanded from `.env` only to full web exposure coverage
 - 280+ paths scanned per target (was 35)
