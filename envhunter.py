@@ -90,8 +90,8 @@ BANNER = """[bold cyan]
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
 ║                                                            ║
-║    [bold white]  .env Exposure & Secrets Recon Framework  v4.2[/bold white][bold cyan]         ║
-║     [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]             ║
+║     [bold white]  .env Exposure & Secrets Recon Framework  v4.2[/bold white][bold cyan]        ║
+║        [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]          ║
 ╚════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
 # ─── SCAN MODULES ─────────────────────────────────────────────────────────────
@@ -1137,13 +1137,13 @@ class TelegramNotifier:
 class EnvHunter:
     def __init__(self, args: DefaultArgs):
         self.args     = args
-        self.session  = self._build_session()
+        self._local   = threading.local()  # thread-local storage for per-thread sessions
         self.results: List[ScanResult] = []
         self.lock     = threading.Lock()
         self.stats    = {
             "total": 0, "exposed": 0, "critical": 0,
             "scanned": 0, "errors": 0, "new_findings": 0,
-            "pages_found": 0,   # NEW: non-.env exposures
+            "pages_found": 0,
         }
         self.state_db = StateDB(DB_PATH)
         self.notifier: Optional[TelegramNotifier] = None
@@ -1276,35 +1276,40 @@ class EnvHunter:
     def _fetch_url(self, url: str) -> Optional[ExposedEnv]:
         """Fetch one URL and return an ExposedEnv if it looks like a real .env file."""
         try:
-            resp = self.session.get(
+            resp = self._local.session.get(
                 url, headers=self._headers(),
                 allow_redirects=False,
-                timeout=(5, self.args.timeout),  # (connect_timeout, read_timeout)
+                stream=True,
+                timeout=(5, self.args.timeout),
             )
             if resp.status_code not in (200, 206):
+                resp.close()
                 return None
 
             ct = resp.headers.get("Content-Type", "")
             if not self.args.aggressive:
-                # Only hard-block binary content types — never a .env file
                 binary = ("image/", "video/", "audio/", "application/pdf",
                           "application/zip", "application/octet-stream",
                           "font/")
                 if any(b in ct for b in binary):
+                    resp.close()
                     return None
-                # text/html CAN be a .env file on misconfigured servers —
-                # let _looks_like_env() decide, don't block here
 
+            # Read at most 64KB — enough for any real .env file.
+            # Without this cap every 200KB 404 page was fully downloaded.
             try:
-                content = resp.text
+                raw_bytes = resp.raw.read(65536, decode_content=True)
+                content   = raw_bytes.decode("utf-8", errors="replace")
             except Exception:
-                content = resp.content.decode("utf-8", errors="replace")
+                resp.close()
+                return None
+            finally:
+                resp.close()
 
             if not self._looks_like_env(content):
                 return None
 
-            # Use byte length for accurate size reporting (matches HTTP Content-Length)
-            byte_len = len(resp.content)
+            byte_len = len(raw_bytes)
             env = ExposedEnv(url, resp.status_code, byte_len, ct)
             env.raw_content = content
             env.findings    = self._extract_findings(content)
@@ -1356,22 +1361,28 @@ class EnvHunter:
         redirect_ok = {"server_status", "api_exposure", "php_info"}
 
         try:
-            resp = self.session.get(
+            resp = self._local.session.get(
                 url,
                 headers=self._headers(),
                 allow_redirects=(module in redirect_ok),
-                timeout=(5, self.args.timeout),  # (connect_timeout, read_timeout)
+                stream=True,
+                timeout=(5, self.args.timeout),
             )
 
-            # Only accept direct 200/206 — redirects mean the resource is
-            # protected or moved; 403/401 means it exists but is locked.
             if resp.status_code not in (200, 206):
+                resp.close()
                 return None
 
+            # Read at most 16KB — signature matching only uses first 8KB anyway.
+            # Capping here prevents downloading full pages for every probe.
             try:
-                content = resp.text
+                raw_bytes = resp.raw.read(16384, decode_content=True)
+                content   = raw_bytes.decode("utf-8", errors="replace")
             except Exception:
-                content = resp.content.decode("utf-8", errors="replace")
+                resp.close()
+                return None
+            finally:
+                resp.close()
 
             if not content or len(content) < 50:
                 return None
@@ -1459,7 +1470,7 @@ class EnvHunter:
                     return None
 
             label            = SCAN_MODULES.get(module, {}).get("label", module)
-            page             = ExposedPage(url, resp.status_code, len(resp.content),
+            page             = ExposedPage(url, resp.status_code, len(raw_bytes),
                                            module, label, evidence)
             page.risk_level  = self._page_risk(module)
             page.raw_snippet = content[:500]
@@ -1478,6 +1489,10 @@ class EnvHunter:
         return None
 
     def scan_target(self, target: str) -> ScanResult:
+        # Build a per-thread session using threading.local() storage.
+        # Each thread gets its own slot — no shared state, no race conditions.
+        if not getattr(self._local, "session", None):
+            self._local.session = self._build_session()
         target = self._normalize(target)
         result = ScanResult(target)
         result.scan_status = "running"
@@ -1603,8 +1618,11 @@ class EnvHunter:
 
     def close(self):
         self.state_db.close()
+        # Close main thread's local session if it exists
         try:
-            self.session.close()
+            s = getattr(self._local, "session", None)
+            if s:
+                s.close()
         except Exception:
             pass
 
