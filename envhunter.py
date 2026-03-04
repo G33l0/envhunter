@@ -10,7 +10,7 @@
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║       .env Exposure & Secrets Recon Framework  v4.3                  ║
+║       .env Exposure & Secrets Recon Framework  v4.4                  ║
 ║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
 ╚══════════════════════════════════════════════════════════════════════╝
 """
@@ -76,7 +76,7 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.3"
+VERSION   = "4.4"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
@@ -91,8 +91,8 @@ BANNER = """[bold cyan]
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
 ║                                                            ║
-║     [bold white]  .env Exposure & Secrets Recon Framework  v4.3[/bold white][bold cyan]        ║
-║       [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]           ║
+║     [bold white]  .env Exposure & Secrets Recon Framework  v4.4[/bold white][bold cyan]        ║
+║        [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]          ║
 ╚════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
 # ─── SCAN MODULES ─────────────────────────────────────────────────────────────
@@ -116,7 +116,17 @@ SCAN_MODULES: dict = {
             "/laravel/.env", "/wp-content/.env", "/application/.env",
             "/server/.env", "/deploy/.env", "/docker/.env",
             "/storage/.env", "/core/.env", "/portal/.env",
-        ],
+        
+                "/.env.local.php",
+                "/.env.production.local",
+                "/.env.development.local",
+                "/site/.env",
+                "/.env_1",
+                "/env",
+                "/env.txt",
+                "/.env.orig",
+                "/.env~",
+                "/._env",],
     },
 
     # ── NEW: phpMyAdmin & DB Admin Tools ─────────────────────────────────────
@@ -153,7 +163,15 @@ SCAN_MODULES: dict = {
             "/webadmin/", "/adminarea/", "/bb-admin/",
             "/adminLogin/", "/admin_area/", "/panel-administracion/",
             "/instadmin/", "/memberadmin/", "/administratorlogin/",
-        ],
+        
+                "/admin/config",
+                "/manager/html",
+                "/phpmyadmin/",
+                "/pma/",
+                "/_phpmyadmin/",
+                "/db/",
+                "/dbadmin/",
+                "/sql/",],
     },
 
     # ── NEW: PHP Info & Debug Pages ───────────────────────────────────────────
@@ -211,7 +229,19 @@ SCAN_MODULES: dict = {
             "/config/config.yml", "/config/config.yaml",
             "/app/config/parameters.yml",
             "/app/config/parameters.yaml",
-        ],
+        
+                "/includes/database.php",
+                "/conf/config.ini",
+                "/config/settings.php",
+                "/settings.py",
+                "/local_settings.py",
+                "/appsettings.json",
+                "/Web.config",
+                "/web.config",
+                "/.npmrc",
+                "/.pypirc",
+                "/Gemfile",
+                "/.htpasswd",],
     },
 
     # ── NEW: Backup & Database Dumps ─────────────────────────────────────────
@@ -227,7 +257,12 @@ SCAN_MODULES: dict = {
             "/public_html.zip", "/html.zip",
             "/db_dump.sql", "/mysqldump.sql",
             "/latest.sql", "/prod.sql", "/production.sql",
-        ],
+        
+                "/dump.sql.gz",
+                "/database.sql.gz",
+                "/files.tar.gz",
+                "/htdocs.tar.gz",
+                "/public_html.tar.gz",],
     },
 
     # ── NEW: Git / VCS Exposure ───────────────────────────────────────────────
@@ -241,7 +276,12 @@ SCAN_MODULES: dict = {
             "/.svn/entries", "/.svn/wc.db",
             "/.hg/hgrc", "/.bzr/README",
             "/CVS/Root", "/CVS/Entries",
-        ],
+        
+                "/.git/FETCH_HEAD",
+                "/.git/refs/heads/master",
+                "/.git/refs/heads/main",
+                "/.git/logs/HEAD",
+                "/.git/info/refs",],
     },
 
     # ── NEW: Log Files ────────────────────────────────────────────────────────
@@ -272,7 +312,12 @@ SCAN_MODULES: dict = {
             "/id_rsa", "/id_rsa.pub",
             "/server.key", "/private.key",
             "/ssl.key", "/ssl.crt", "/server.crt",
-        ],
+        
+                "/id_dsa",
+                "/id_ecdsa",
+                "/id_ed25519",
+                "/server.pem",
+                "/privatekey.pem",],
     },
 
     # ── NEW: Composer / Package Manifests ────────────────────────────────────
@@ -715,8 +760,9 @@ class DefaultArgs:
         self._shodan_queries: List[str]  = []
         self._censys_queries: List[str]  = []
         # Scan
-        self.threads: int             = 10
+        self.threads: int             = 25
         self.timeout: int             = 10
+        self.path_workers: int        = 10   # parallel path workers per target
         self.delay: float             = 0.0
         self.proxy: Optional[str]     = None
         self.aggressive: bool         = False
@@ -768,6 +814,9 @@ class StateDB:
         self.db_path = db_path
         self.lock    = threading.Lock()
         self.conn    = sqlite3.connect(db_path, check_same_thread=False)
+        self.conn.execute("PRAGMA journal_mode=WAL")
+        self.conn.execute("PRAGMA synchronous=NORMAL")
+        self.conn.execute("PRAGMA cache_size=10000")
         self._init()
 
     def _init(self):
@@ -1179,7 +1228,7 @@ class EnvHunter:
         s.verify = False
         # Connection pooling: large pool for many concurrent threads
         # Retry once on connection reset / transient errors (not on 4xx/5xx)
-        retry = Retry(total=1, connect=1, read=0, status=0, raise_on_status=False)
+        retry = Retry(total=0, connect=0, read=0, status=0, raise_on_status=False)
         adapter = HTTPAdapter(
             pool_connections=20,
             pool_maxsize=max(self.args.threads, 20),
@@ -1300,7 +1349,7 @@ class EnvHunter:
                 url, headers=self._headers(),
                 allow_redirects=False,
                 stream=True,
-                timeout=(3, self.args.timeout),
+                timeout=(2, self.args.timeout),
             )
             if resp.status_code not in (200, 206):
                 resp.close()
@@ -1344,7 +1393,7 @@ class EnvHunter:
                     resp2 = self._local.session.get(
                         http_url, headers=self._headers(),
                         allow_redirects=False, stream=True,
-                        timeout=(3, self.args.timeout),
+                        timeout=(2, self.args.timeout),
                     )
                     if resp2.status_code not in (200, 206):
                         resp2.close(); return None
@@ -1394,8 +1443,8 @@ class EnvHunter:
           means the admin panel is PROTECTED — it requires authentication.
           Following the redirect would land on a login form which contains
           "password" and "username" words, causing false positives.
-        - Signatures require ALL patterns in the list to match (AND logic).
-          This prevents single broad words from triggering a finding.
+        - Signatures use OR logic: ANY one matching pattern = confirmed exposure.
+          Each signature is specific enough that a single match is conclusive.
         - Evidence shown in the report is the matched line from the
           response, not just the tiny regex token.
         """
@@ -1412,7 +1461,7 @@ class EnvHunter:
                 _head = self._local.session.head(
                     url, headers=self._headers(),
                     allow_redirects=_allow_redir,
-                    timeout=(3, 3),
+                    timeout=(2, 2),
                 )
                 if _head.status_code not in (200, 206):
                     return None
@@ -1425,7 +1474,7 @@ class EnvHunter:
                 headers=self._headers(),
                 allow_redirects=_allow_redir,
                 stream=True,
-                timeout=(3, self.args.timeout),
+                timeout=(2, self.args.timeout),
             )
 
             if resp.status_code not in (200, 206):
@@ -1527,8 +1576,7 @@ class EnvHunter:
             return page
 
         except requests.exceptions.SSLError:
-            if url.startswith("https://"):
-                return self._fetch_page(url.replace("https://", "http://"), module)
+            return None  # SSL failure — skip rather than recurse or retry
         except (requests.exceptions.ConnectionError,
                 requests.exceptions.Timeout,
                 requests.exceptions.TooManyRedirects):
@@ -1558,70 +1606,89 @@ class EnvHunter:
         self._tg_queue.put((fn, args, kwargs))
 
     def scan_target(self, target: str) -> ScanResult:
-        # Build a per-thread session using threading.local() storage.
-        # Each thread gets its own slot — no shared state, no race conditions.
+        # Per-thread session (threading.local — no shared state/race conditions)
         if not getattr(self._local, "session", None):
             self._local.session = self._build_session()
         target = self._normalize(target)
         result = ScanResult(target)
         result.scan_status = "running"
 
-        # ── Phase 1: .env file scanning (existing logic) ───────────────────
+        # ── Host reachability pre-check ──────────────────────────────────────
+        # One cheap HEAD to the root. Dead/filtered hosts fail in 2s and we
+        # skip all 277 probes — saves up to 554s per unreachable target.
+        try:
+            self._local.session.head(
+                target + "/", headers=self._headers(),
+                allow_redirects=True, timeout=(2, 2),
+            )
+        except Exception:
+            result.scan_status = "unreachable"
+            if self.args.verbose:
+                self._print_queue.put(f"[dim]  [~] Unreachable (skipped): {target}[/dim]")
+            return result
+
+        # ── Build full work list ─────────────────────────────────────────────
+        work: list = []
         env_paths = list(SCAN_MODULES["env_files"]["paths"])
         for p in (self.args.extra_paths or []):
             if p not in env_paths:
                 env_paths.append(p)
-
         for path in env_paths:
-            url = target + path
-            env = self._fetch_url(url)
-            if env:
-                result.exposed_envs.append(env)
-                is_new = self.state_db.mark_seen_atomic(env)
+            work.append((target + path, "env", "env_files"))
+        for mod_key, mod_cfg in SCAN_MODULES.items():
+            if mod_key == "env_files" or not mod_cfg.get("enabled", True):
+                continue
+            for path in mod_cfg["paths"]:
+                work.append((target + path, "page", mod_key))
 
+        # ── Inner probe worker ───────────────────────────────────────────────
+        def _probe(item):
+            url, kind, module = item
+            if kind == "env":
+                env = self._fetch_url(url)
+                if not env:
+                    return None
+                is_new = self.state_db.mark_seen_atomic(env)
                 if self.args.verbose:
-                    rc    = {"CRITICAL": "red", "HIGH": "yellow",
-                             "MEDIUM": "cyan", "LOW": "green"}.get(env.risk_level, "white")
+                    rc = {"CRITICAL":"red","HIGH":"yellow","MEDIUM":"cyan","LOW":"green"}.get(env.risk_level,"white")
                     badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
                     self._print_queue.put(f"  {badge}[bold {rc}]✓ .env [{env.risk_level}] {url}[/bold {rc}]")
-
                 if self.notifier and is_new and env.risk_level != "LOW":
                     self._tg_notify(self.notifier.send_finding, env, target, is_new=True)
                     with self.lock:
                         self.stats["new_findings"] += 1
+                return ("env", env)
+            else:
+                page = self._fetch_page(url, module)
+                if not page:
+                    return None
+                is_new = self.state_db.mark_seen_page_atomic(page)
+                if self.args.verbose:
+                    rc = {"CRITICAL":"red","HIGH":"yellow","MEDIUM":"cyan","LOW":"green"}.get(page.risk_level,"white")
+                    badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
+                    self._print_queue.put(f"  {badge}[bold {rc}]✓ {page.label} [{page.risk_level}] {url}[/bold {rc}]")
+                if self.notifier and is_new and page.risk_level not in ("LOW",):
+                    self._tg_notify(self.notifier.send_page_finding, page, target)
+                    with self.lock:
+                        self.stats["new_findings"] += 1
+                return ("page", page)
 
-            if self.args.delay:
-                time.sleep(random.uniform(0.05, min(0.2, self.args.delay)))
-
-        # ── Phase 2: Web exposure scanning (added v4.0) ─────────────────────
-        for mod_key, mod_cfg in SCAN_MODULES.items():
-            if mod_key == "env_files":
-                continue  # already handled above
-            if not mod_cfg.get("enabled", True):
-                continue
-
-            for path in mod_cfg["paths"]:
-                url  = target + path
-                page = self._fetch_page(url, mod_key)
-                if page:
-                    result.exposed_pages.append(page)
-                    is_new = self.state_db.mark_seen_page_atomic(page)
-
-                    if self.args.verbose:
-                        rc    = {"CRITICAL": "red", "HIGH": "yellow",
-                                 "MEDIUM": "cyan", "LOW": "green"}.get(page.risk_level, "white")
-                        badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
-                        self._print_queue.put(
-                            f"  {badge}[bold {rc}]✓ {page.label} [{page.risk_level}] {url}[/bold {rc}]"
-                        )
-
-                    if self.notifier and is_new and page.risk_level not in ("LOW",):
-                        self._tg_notify(self.notifier.send_page_finding, page, target)
-                        with self.lock:
-                            self.stats["new_findings"] += 1
-
-                if self.args.delay:
-                    time.sleep(random.uniform(0.05, min(0.2, self.args.delay)))
+        # ── Dispatch all paths in parallel (inner pool per target) ───────────
+        # 10 path workers × 25 outer target threads = 250 concurrent connections
+        # A dead target now completes in ~(277/10 batches × 2s) = ~56s instead of 554s
+        PATH_WORKERS = getattr(self.args, "path_workers", 10)
+        with ThreadPoolExecutor(max_workers=PATH_WORKERS) as inner:
+            for fut in as_completed([inner.submit(_probe, item) for item in work]):
+                try:
+                    res = fut.result()
+                    if res:
+                        kind, obj = res
+                        if kind == "env":
+                            result.exposed_envs.append(obj)
+                        else:
+                            result.exposed_pages.append(obj)
+                except Exception:
+                    pass
 
         result.scan_status = "done"
         return result
@@ -2416,6 +2483,8 @@ def build_parser() -> argparse.ArgumentParser:
     disc.add_argument("--no-otx",           action="store_true", help="Disable AlienVault OTX")
 
     sc = p.add_argument_group("Scan Options")
+    sc.add_argument("--path-workers", type=int, default=10, metavar="N",
+                    help="Path workers per target (default 10; higher=faster on live hosts)")
     sc.add_argument("-t", "--threads",   type=int,   default=25,  metavar="N",  help="Worker threads (default: 25, max recommended: 50)")
     sc.add_argument("--timeout",         type=int,   default=10)
     sc.add_argument("--delay",           type=float, default=0.0)
