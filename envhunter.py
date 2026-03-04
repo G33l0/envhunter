@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-╔══════════════════════════════════════════════════════════════════════╗
-║                                                                      ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗           ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║           ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║           ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║           ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
-║                                                                      ║
-║       .env Exposure & Secrets Recon Framework  v4.4                  ║
-║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
-╚══════════════════════════════════════════════════════════════════════╝
+╔═════════════════════════════════════════════════════════════╗
+║                                                             ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗    ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║    ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║    ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║    ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║    ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ║
+║                                                             ║
+║       .env Exposure & Secrets Recon Framework  v4.6         ║
+║         Author : g33l0  |  Telegram : @x0x0h33l0            ║
+╚═════════════════════════════════════════════════════════════╝
 """
 
 # ── stdlib ────────────────────────────────────────────────────────────────────
@@ -76,7 +76,7 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.4"
+VERSION   = "4.6"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
@@ -91,8 +91,8 @@ BANNER = """[bold cyan]
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
 ║                                                            ║
-║     [bold white]  .env Exposure & Secrets Recon Framework  v4.4[/bold white][bold cyan]        ║
-║        [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]          ║
+║   [bold white]   .env Exposure & Secrets Recon Framework  v4.4[/bold white][bold cyan]         ║
+║   [bold red]     Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]            ║
 ╚════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
 # ─── SCAN MODULES ─────────────────────────────────────────────────────────────
@@ -572,7 +572,7 @@ FP_MARKERS = [
     r'(?i)=\s*\[',                # array placeholder
     r'(?i)_example\b',            # example suffix
     r'(?i)_placeholder\b',        # placeholder suffix
-    r'(?i)change.?me\b',          # change-me placeholder
+    r'(?i)change.?me',             # change-me / change_me_please placeholder
     r'(?i)xxx+',                  # xxx placeholder
     r'(?i)=\s*enter.{0,20}here',  # "enter value here" placeholder
     r'(?i)=\s*replace.{0,20}this',# "replace this" placeholder
@@ -607,7 +607,8 @@ _SOFT_404_RE = re.compile(
     r'|(404\s*[-–—]\s*(not found|page not found|file not found))'
     r'|(this page (doesn.t|does not) exist)'
     r'|(oops[.!]?\s+(something went wrong|page not found|we can.t find))'
-    r'|(no\s+such\s+file\s+or\s+directory)',
+    r'|(no\s+such\s+file\s+or\s+directory)'
+    r'|(<h[12][^>]*>\s*(404|page\s+not\s+found|not\s+found)[^<]*</h[12]>)',
     re.IGNORECASE
 )
 
@@ -1162,6 +1163,7 @@ class TelegramNotifier:
             f"📋 <b>EnvHunter — Scan Complete</b>\n"
             f"━━━━━━━━━━━━━━━━━━━━━━\n"
             f"🎯 Targets Scanned : <b>{stats.get('scanned',0)}</b>\n"
+            f"🔌 Unreachable      : <b>{stats.get('unreachable',0)}</b>\n"
             f"🚨 .env Exposed    : <b>{stats.get('exposed',0)}</b>\n"
             f"🌐 Pages Exposed   : <b>{stats.get('pages_found',0)}</b>\n"
             f"🔴 Critical        : <b>{stats.get('critical',0)}</b>\n"
@@ -1184,8 +1186,8 @@ class TelegramNotifier:
             f"📊 <b>HTTP:</b> {page.status_code}  |  📏 <b>Size:</b> {page.content_length}B\n"
             f"🕐 <b>Time:</b> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n"
             f"\n🔍 <b>Evidence:</b>\n{ev}\n"
-            f"\n<i>EnvHunter v{{VERSION}} | {AUTHOR} | {TG_HANDLE}</i>"
-        ).replace("{VERSION}", VERSION)
+            f"\n<i>EnvHunter v{VERSION} | {AUTHOR} | {TG_HANDLE}</i>"
+        )
         return self._send(msg)
 
     def test_connection(self) -> bool:
@@ -1205,7 +1207,7 @@ class EnvHunter:
         self.stats    = {
             "total": 0, "exposed": 0, "critical": 0,
             "scanned": 0, "errors": 0, "new_findings": 0,
-            "pages_found": 0,
+            "pages_found": 0, "unreachable": 0,
         }
         self.state_db = StateDB(DB_PATH)
         self.notifier: Optional[TelegramNotifier] = None
@@ -1238,6 +1240,20 @@ class EnvHunter:
         s.mount("https://", adapter)
         return s
 
+    def _get_session(self) -> "requests.Session":
+        """
+        Return this thread's requests.Session, creating it on first access.
+
+        Uses threading.local() so every thread — outer pool, inner pool,
+        scheduler, main — gets its own independent session with no sharing.
+        This is the ONLY correct way to use threading.local with a thread pool:
+        thread pool workers are reused across tasks, so we can't rely on the
+        outer scan_target() having initialised the session for inner workers.
+        """
+        if not getattr(self._local, "session", None):
+            self._local.session = self._build_session()
+        return self._local.session
+
     def _headers(self) -> dict:
         h = {
             "User-Agent":      random.choice(USER_AGENTS),
@@ -1258,7 +1274,7 @@ class EnvHunter:
         Example: https://example.com/app/v2 → https://example.com
         This ensures every path in SCAN_MODULES is appended to the root.
         """
-        t = target.strip()
+        t = target.strip().lower()  # normalise scheme/host case before parsing
         # Ensure scheme is present so urllib can parse it
         if not t.startswith(("http://", "https://")):
             t = "https://" + t
@@ -1273,7 +1289,11 @@ class EnvHunter:
         # Strip BOM (Byte Order Mark) — Windows editors add \ufeff to files.
         # Without stripping it, the HTML check and KEY=VALUE scan both fail
         # on the first character of an otherwise valid .env file.
-        text = text.lstrip('\ufeff\ufffe\xef\xbb\xbf')
+        # Strip BOM (Byte Order Mark) — Windows editors add these to .env files
+        for _bom in ('\ufeff', '\ufffe', '\xef\xbb\xbf'):
+            if text.startswith(_bom):
+                text = text[len(_bom):]
+                break
         # Reject HTML pages immediately
         if re.search(r'<html|<body|<!doctype', text[:500], re.IGNORECASE):
             return False
@@ -1345,7 +1365,7 @@ class EnvHunter:
     def _fetch_url(self, url: str) -> Optional[ExposedEnv]:
         """Fetch one URL and return an ExposedEnv if it looks like a real .env file."""
         try:
-            resp = self._local.session.get(
+            resp = self._get_session().get(
                 url, headers=self._headers(),
                 allow_redirects=False,
                 stream=True,
@@ -1390,13 +1410,14 @@ class EnvHunter:
             if url.startswith("https://"):
                 http_url = url.replace("https://", "http://", 1)
                 try:
-                    resp2 = self._local.session.get(
+                    resp2 = self._get_session().get(
                         http_url, headers=self._headers(),
                         allow_redirects=False, stream=True,
                         timeout=(2, self.args.timeout),
                     )
                     if resp2.status_code not in (200, 206):
-                        resp2.close(); return None
+                        resp2.close()
+                        return None
                     try:
                         raw2    = resp2.raw.read(65536, decode_content=True)
                         content = raw2.decode("utf-8", errors="replace")
@@ -1458,18 +1479,19 @@ class EnvHunter:
             # with no body downloaded. Only 200s get a full GET + body read.
             _allow_redir = (module in redirect_ok)
             try:
-                _head = self._local.session.head(
+                _head = self._get_session().head(
                     url, headers=self._headers(),
                     allow_redirects=_allow_redir,
                     timeout=(2, 2),
                 )
+                _head.close()
                 if _head.status_code not in (200, 206):
                     return None
             except Exception:
                 return None
 
             # Status 200 confirmed — fetch body to run signature checks
-            resp = self._local.session.get(
+            resp = self._get_session().get(
                 url,
                 headers=self._headers(),
                 allow_redirects=_allow_redir,
@@ -1606,24 +1628,45 @@ class EnvHunter:
         self._tg_queue.put((fn, args, kwargs))
 
     def scan_target(self, target: str) -> ScanResult:
-        # Per-thread session (threading.local — no shared state/race conditions)
-        if not getattr(self._local, "session", None):
-            self._local.session = self._build_session()
+        # Session is created lazily by _get_session() — works for both outer
+        # and inner thread pool workers without explicit init here.
         target = self._normalize(target)
         result = ScanResult(target)
         result.scan_status = "running"
 
         # ── Host reachability pre-check ──────────────────────────────────────
-        # One cheap HEAD to the root. Dead/filtered hosts fail in 2s and we
-        # skip all 277 probes — saves up to 554s per unreachable target.
-        try:
-            self._local.session.head(
-                target + "/", headers=self._headers(),
-                allow_redirects=True, timeout=(2, 2),
-            )
-        except Exception:
+        # Goals:
+        #   1. Skip truly dead hosts fast (saves 322 × 2s timeout = 644s)
+        #   2. NOT skip live hosts that return 403/429/503 on "/" (anti-bot)
+        #   3. NOT skip hosts that are slow to respond but alive
+        # Strategy:
+        #   - HEAD "/" with 4s connect timeout (generous for CDN/slow sites)
+        #   - ANY HTTP response code = host is alive, continue scanning
+        #   - Only ConnectionError / connect-timeout = truly dead, skip
+        #   - SSL failure on HTTPS → retry once over HTTP before giving up
+        _alive = False
+        _connect_exc = None
+        for _scheme_try in (target, target.replace("https://", "http://", 1)):
+            try:
+                self._get_session().head(
+                    _scheme_try + "/", headers=self._headers(),
+                    allow_redirects=True, timeout=(4, 6),
+                )
+                _alive = True
+                break  # Any HTTP response = alive
+            except requests.exceptions.SSLError:
+                _connect_exc = "ssl"
+                continue  # Try HTTP fallback
+            except (requests.exceptions.ConnectionError,
+                    requests.exceptions.Timeout):
+                _connect_exc = "conn"
+                continue  # Try HTTP fallback before giving up
+            except Exception:
+                _alive = True  # Unexpected error ≠ dead host — scan anyway
+                break
+        if not _alive:
             result.scan_status = "unreachable"
-            if self.args.verbose:
+            if not self.args.quiet:
                 self._print_queue.put(f"[dim]  [~] Unreachable (skipped): {target}[/dim]")
             return result
 
@@ -1643,37 +1686,47 @@ class EnvHunter:
 
         # ── Inner probe worker ───────────────────────────────────────────────
         def _probe(item):
-            url, kind, module = item
-            if kind == "env":
-                env = self._fetch_url(url)
-                if not env:
-                    return None
-                is_new = self.state_db.mark_seen_atomic(env)
+            """
+            Probe a single URL. Called from inner thread pool workers.
+            _get_session() ensures each worker thread has its own HTTP session —
+            this is the fix for '_thread._local object has no attribute session'.
+            """
+            try:
+                url, kind, module = item
+                if kind == "env":
+                    env = self._fetch_url(url)
+                    if not env:
+                        return None
+                    is_new = self.state_db.mark_seen_atomic(env)
+                    if self.args.verbose:
+                        rc = {"CRITICAL":"red","HIGH":"yellow","MEDIUM":"cyan","LOW":"green"}.get(env.risk_level,"white")
+                        badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
+                        self._print_queue.put(f"  {badge}[bold {rc}]✓ .env [{env.risk_level}] {url}[/bold {rc}]")
+                    if self.notifier and is_new and env.risk_level != "LOW":
+                        self._tg_notify(self.notifier.send_finding, env, target, is_new=True)
+                        with self.lock:
+                            self.stats["new_findings"] += 1
+                    return ("env", env)
+                else:
+                    page = self._fetch_page(url, module)
+                    if not page:
+                        return None
+                    is_new = self.state_db.mark_seen_page_atomic(page)
+                    if self.args.verbose:
+                        rc = {"CRITICAL":"red","HIGH":"yellow","MEDIUM":"cyan","LOW":"green"}.get(page.risk_level,"white")
+                        badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
+                        self._print_queue.put(f"  {badge}[bold {rc}]✓ {page.label} [{page.risk_level}] {url}[/bold {rc}]")
+                    if self.notifier and is_new and page.risk_level not in ("LOW",):
+                        self._tg_notify(self.notifier.send_page_finding, page, target)
+                        with self.lock:
+                            self.stats["new_findings"] += 1
+                    return ("page", page)
+            except Exception as _probe_err:
                 if self.args.verbose:
-                    rc = {"CRITICAL":"red","HIGH":"yellow","MEDIUM":"cyan","LOW":"green"}.get(env.risk_level,"white")
-                    badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
-                    self._print_queue.put(f"  {badge}[bold {rc}]✓ .env [{env.risk_level}] {url}[/bold {rc}]")
-                if self.notifier and is_new and env.risk_level != "LOW":
-                    self._tg_notify(self.notifier.send_finding, env, target, is_new=True)
-                    with self.lock:
-                        self.stats["new_findings"] += 1
-                return ("env", env)
-            else:
-                page = self._fetch_page(url, module)
-                if not page:
-                    return None
-                is_new = self.state_db.mark_seen_page_atomic(page)
-                if self.args.verbose:
-                    rc = {"CRITICAL":"red","HIGH":"yellow","MEDIUM":"cyan","LOW":"green"}.get(page.risk_level,"white")
-                    badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
-                    self._print_queue.put(f"  {badge}[bold {rc}]✓ {page.label} [{page.risk_level}] {url}[/bold {rc}]")
-                if self.notifier and is_new and page.risk_level not in ("LOW",):
-                    self._tg_notify(self.notifier.send_page_finding, page, target)
-                    with self.lock:
-                        self.stats["new_findings"] += 1
-                return ("page", page)
+                    self._print_queue.put(f"[dim red]  [!] probe error {item[0] if item else '?'}: {_probe_err}[/dim red]")
+                return None
 
-        # ── Dispatch all paths in parallel (inner pool per target) ───────────
+        # ── Dispatch all paths in parallel (inner pool per target) ──────────
         # 10 path workers × 25 outer target threads = 250 concurrent connections
         # A dead target now completes in ~(277/10 batches × 2s) = ~56s instead of 554s
         PATH_WORKERS = getattr(self.args, "path_workers", 10)
@@ -1687,8 +1740,11 @@ class EnvHunter:
                             result.exposed_envs.append(obj)
                         else:
                             result.exposed_pages.append(obj)
-                except Exception:
-                    pass
+                except Exception as _probe_err:
+                    if self.args.verbose:
+                        self._print_queue.put(
+                            f"[dim red]  [!] probe error: {_probe_err}[/dim red]"
+                        )
 
         result.scan_status = "done"
         return result
@@ -1716,7 +1772,10 @@ class EnvHunter:
                         result = future.result(timeout=_tgt_timeout)
                         with self.lock:
                             self.results.append(result)
-                            self.stats["scanned"] += 1
+                            if result.scan_status == "unreachable":
+                                self.stats["unreachable"] += 1
+                            else:
+                                self.stats["scanned"] += 1
                             if result.exposed_envs:
                                 self.stats["exposed"] += len(result.exposed_envs)
                                 for env in result.exposed_envs:
@@ -1762,17 +1821,18 @@ class EnvHunter:
     def close(self):
         # Drain Telegram queue then stop worker cleanly
         try:
-            self._tg_queue.join()
-            self._tg_queue.put(None)
+            self._tg_queue.put(None)  # sentinel: signals worker to stop
+            self._tg_queue.join()     # blocks until all items incl. sentinel done
             self._tg_worker.join(timeout=5)
         except Exception:
             pass
         self.state_db.close()
-        # Close main thread's local session if it exists
+        # Close this thread's local session if it exists
         try:
             s = getattr(self._local, "session", None)
             if s:
                 s.close()
+                self._local.session = None
         except Exception:
             pass
 
@@ -1826,6 +1886,11 @@ class Reporter:
                     str(tf),
                     f"[{self._rc(highest)}]{highest}[/{self._rc(highest)}]"
                 )
+            elif r.scan_status == "unreachable":
+                t.add_row(r.target, src_label,
+                          "[dim yellow]~ Unreachable[/dim yellow]",
+                          "[dim]—[/dim]", "[dim]—[/dim]",
+                          "[dim]—[/dim]", "[dim]—[/dim]")
             else:
                 t.add_row(r.target, src_label, "[dim]✗ Clean[/dim]",
                           "0", "0", "0", "[dim]—[/dim]")
@@ -1875,7 +1940,8 @@ class Reporter:
             f"[bold green]Pages Exposed  :[/bold green]  {self.stats.get('pages_found', 0)}\n"
             f"[bold red]Critical       :[/bold red]  {self.stats.get('critical', 0)}\n"
             f"[bold cyan]New Findings   :[/bold cyan]  {self.stats.get('new_findings', 0)}\n"
-            f"[bold yellow]Errors         :[/bold yellow]  {self.stats.get('errors', 0)}",
+            f"[bold yellow]Errors         :[/bold yellow]  {self.stats.get('errors', 0)}\n"
+            f"[dim]Unreachable    :[/dim]  {self.stats.get('unreachable', 0)}",
             title="[bold cyan]◉ Final Statistics[/bold cyan]", border_style="cyan"
         ))
 
