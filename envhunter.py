@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-╔════════════════════════════════════════════════════════════╗
-║                                                            ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗   ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║   ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║   ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║   ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
-║                                                            ║
-║       .env Exposure & Secrets Recon Framework  v4.7        ║
-║          Author : g33l0  |  Telegram : @x0x0h33l0          ║
-╚════════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗           ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║           ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║           ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║           ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
+║                                                                      ║
+║       .env Exposure & Secrets Recon Framework  v4.8                  ║
+║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
+╚══════════════════════════════════════════════════════════════════════╝
 """
 
 # ── stdlib ────────────────────────────────────────────────────────────────────
@@ -76,7 +76,7 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.7"
+VERSION   = "4.8"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
@@ -91,7 +91,7 @@ BANNER = """[bold cyan]
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║   [bold white]  .env Exposure & Secrets Recon Framework  v4.7[/bold white][bold cyan]               ║
+║   [bold white]  .env Exposure & Secrets Recon Framework  v4.4[/bold white][bold cyan]               ║
 ║   [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]              ║
 ╚══════════════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
@@ -397,12 +397,12 @@ ENV_PATHS = list(dict.fromkeys(ENV_PATHS))  # deduplicate preserving order
 SENSITIVE_PATTERNS = {
     # ── Existing patterns (v3.x) ─────────────────────────────────────────────
     "SMTP / Mail":          r'(?i)(smtp|mail_host|mail_port|mail_user|mail_pass|mailer|sendgrid|mailgun|ses_key)',
-    "Database Credentials": r'(?i)(db_pass|db_user|database_url|mysql_pw|postgres_pass|mongo_uri|db_host|db_name)',
-    "API Keys":             r'(?i)(api_key|api_secret|api_token|access_key|secret_key|client_secret|consumer_key)',
+    "Database Credentials": r'(?i)(db_pass|db_user|database_url|mysql_pw|postgres_pass|mongo_uri|db_host|db_name|dbPassword|dbUser|databaseUrl|mongoUri)',
+    "API Keys":             r'(?i)(api_key|api_secret|api_token|access_key|secret_key|client_secret|consumer_key|apiKey|apiSecret|accessToken|secretKey)',
     "Cloud Credentials":    r'(?i)(aws_access|aws_secret|gcp_key|azure_client|digitalocean_token|cloudflare_api)',
     "Auth / JWT Secrets":   r'(?i)(jwt_secret|app_secret|auth_secret|secret_key|encryption_key|token_secret)',
     "OAuth / SSO":          r'(?i)(oauth_|client_id|client_secret|github_token|google_client|facebook_app)',
-    "Passwords":            r'(?i)(password|passwd|pass=|pwd=|passphrase)',
+    "Passwords":            r'(?i)(password|passwd|pass=|pwd=|passphrase|dbPassword|userPassword|adminPassword|appPassword)',
     "Usernames":            r'(?i)(username|user_name|login_user|admin_user)',
     "Stripe / Payment":     r'(?i)(stripe_key|stripe_secret|paypal_secret|braintree|square_token)',
     "Twilio / SMS":         r'(?i)(twilio_sid|twilio_token|twilio_auth|vonage_api|nexmo_key)',
@@ -1329,7 +1329,19 @@ class EnvHunter:
                 ln
             )
         ]
-        return len(actual) >= 2
+        # Primary check: 2+ real KEY=VALUE lines (standard .env)
+        if len(actual) >= 2:
+            return True
+        # Secondary check: even 1 line is enough if it matches a known
+        # secret pattern — catches minimal .env files (e.g. single-key Laravel)
+        if len(actual) == 1:
+            high_signal = re.search(
+                r'(?i)(password|secret|api_key|apikey|token|private_key'
+                r'|stripe|aws_secret|jwt|auth_key|access_key)',
+                actual[0]
+            )
+            return bool(high_signal)
+        return False
 
     def _is_fp(self, line: str) -> bool:
         return bool(_FP_RE_COMPILED.search(line))
@@ -1364,82 +1376,113 @@ class EnvHunter:
         return "LOW"
 
     def _fetch_url(self, url: str) -> Optional[ExposedEnv]:
-        """Fetch one URL and return an ExposedEnv if it looks like a real .env file."""
-        try:
-            resp = self._get_session().get(
-                url, headers=self._headers(),
-                allow_redirects=True,   # follow up to 3 hops — some servers
-                                        # 301/302 /.env → /.env/ or https://
-                stream=True,
-                timeout=(4, self.args.timeout),  # 4s connect: generous for
-                                                  # slow shared/cPanel hosts
-            )
-            if resp.status_code not in (200, 206):
-                resp.close()
-                return None
+        """Fetch one URL and return an ExposedEnv if it looks like a real .env file.
 
-            ct = resp.headers.get("Content-Type", "")
-            if not self.args.aggressive:
-                binary = ("image/", "video/", "audio/", "application/pdf",
-                          "application/zip", "application/octet-stream",
-                          "font/")
-                if any(b in ct for b in binary):
+        REDIRECT STRATEGY — why allow_redirects=False is correct for .env:
+          A real exposed .env file returns HTTP 200 directly.
+          If a server redirects /.env → /cpanel/ or /login, that means there is
+          NO .env file there — the redirect goes to the site's default handler.
+          Following that redirect would land on an HTML login page, which
+          _looks_like_env() correctly rejects, but wastes time and bandwidth.
+
+          EXCEPTION: we DO follow same-resource redirects — HTTP→HTTPS upgrades
+          (301 https://same-host/same-path) and trailing-slash normalisation
+          (302 /.env → /.env/). These are safe to follow because the destination
+          still points at the .env resource itself.
+        """
+        def _is_env_redirect(original: str, location: str) -> bool:
+            """Return True only if the redirect target is still the .env resource."""
+            from urllib.parse import urlparse as _up, urljoin as _uj
+            abs_loc = _uj(original, location)
+            op = _up(original); lp = _up(abs_loc)
+            # Same host (HTTP→HTTPS upgrade counts)
+            if op.netloc != lp.netloc:
+                return False
+            orig_path = op.path.rstrip("/")
+            loc_path  = lp.path.rstrip("/")
+            # Same path (trailing-slash redirect) or target still looks like env
+            return (orig_path == loc_path or
+                    loc_path.endswith(".env") or
+                    loc_path == "/env")
+
+        def _try_fetch(fetch_url: str, redirects: bool) -> Optional[ExposedEnv]:
+            """Inner: fetch fetch_url, return ExposedEnv or None."""
+            try:
+                resp = self._get_session().get(
+                    fetch_url, headers=self._headers(),
+                    allow_redirects=redirects,
+                    stream=True,
+                    timeout=(4, self.args.timeout),
+                )
+                # If no-redirect and got a redirect: check if worth following
+                if not redirects and resp.status_code in (301, 302, 303, 307, 308):
+                    location = resp.headers.get("Location", "")
+                    resp.close()
+                    if location and _is_env_redirect(fetch_url, location):
+                        # Safe redirect (http→https or trailing slash) — follow it
+                        return _try_fetch(fetch_url, redirects=True)
+                    # Redirect goes somewhere else (login, cpanel…) — not a .env
+                    return None
+
+                if resp.status_code not in (200, 206):
                     resp.close()
                     return None
 
-            # Read at most 64KB — enough for any real .env file.
-            # Without this cap every 200KB 404 page was fully downloaded.
-            try:
-                raw_bytes = resp.raw.read(65536, decode_content=True)
-                content   = raw_bytes.decode("utf-8", errors="replace")
-            except Exception:
-                resp.close()
+                ct = resp.headers.get("Content-Type", "")
+                if not self.args.aggressive:
+                    binary = ("image/", "video/", "audio/", "application/pdf",
+                              "application/zip", "application/octet-stream",
+                              "font/")
+                    if any(b in ct for b in binary):
+                        resp.close()
+                        return None
+
+                # Read at most 64 KB — more than enough for any real .env file
+                try:
+                    raw_bytes = resp.raw.read(65536, decode_content=True)
+                    content   = raw_bytes.decode("utf-8", errors="replace")
+                except Exception:
+                    resp.close()
+                    return None
+                finally:
+                    resp.close()
+
+                if not self._looks_like_env(content):
+                    return None
+
+                # Use the final URL (after any safe redirect) as the finding URL
+                final_url = fetch_url
+                byte_len  = len(raw_bytes)
+                env = ExposedEnv(final_url, resp.status_code, byte_len, ct)
+                env.raw_content = content
+                env.findings    = self._extract_findings(content)
+                env.risk_level  = self._risk_level(env.findings)
+                return env
+
+            except (requests.exceptions.ConnectionError,
+                    requests.exceptions.Timeout,
+                    requests.exceptions.TooManyRedirects):
                 return None
-            finally:
-                resp.close()
-
-            if not self._looks_like_env(content):
+            except Exception as e:
+                if self.args.verbose:
+                    self._print_queue.put(f"[dim red]  [!] {fetch_url}: {e}[/dim red]")
                 return None
 
-            byte_len = len(raw_bytes)
-            env = ExposedEnv(url, resp.status_code, byte_len, ct)
-            env.raw_content = content
-            env.findings    = self._extract_findings(content)
-            env.risk_level  = self._risk_level(env.findings)
-            return env
+        try:
+            # Primary attempt — no redirects (see docstring for why)
+            result = _try_fetch(url, redirects=False)
+            if result is not None:
+                return result
 
-        except requests.exceptions.SSLError:
-            # Retry once over plain HTTP — non-recursive to avoid stack overflow
+            # SSL fallback: retry once over plain HTTP — non-recursive
             if url.startswith("https://"):
                 http_url = url.replace("https://", "http://", 1)
-                try:
-                    resp2 = self._get_session().get(
-                        http_url, headers=self._headers(),
-                        allow_redirects=True, stream=True,
-                        timeout=(4, self.args.timeout),
-                    )
-                    if resp2.status_code not in (200, 206):
-                        resp2.close()
-                        return None
-                    try:
-                        raw2    = resp2.raw.read(65536, decode_content=True)
-                        content = raw2.decode("utf-8", errors="replace")
-                    finally:
-                        resp2.close()
-                    if not self._looks_like_env(content):
-                        return None
-                    ct = resp2.headers.get("Content-Type", "")
-                    env = ExposedEnv(http_url, resp2.status_code, len(raw2), ct)
-                    env.raw_content = content
-                    env.findings    = self._extract_findings(content)
-                    env.risk_level  = self._risk_level(env.findings)
-                    return env
-                except Exception:
-                    return None
-        except (requests.exceptions.ConnectionError,
-                requests.exceptions.Timeout,
-                requests.exceptions.TooManyRedirects):
-            pass
+                return _try_fetch(http_url, redirects=False)
+
+        except requests.exceptions.SSLError:
+            if url.startswith("https://"):
+                http_url = url.replace("https://", "http://", 1)
+                return _try_fetch(http_url, redirects=False)
         except Exception as e:
             if self.args.verbose:
                 self._print_queue.put(f"[dim red]  [!] {url}: {e}[/dim red]")
