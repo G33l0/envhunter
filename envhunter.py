@@ -10,7 +10,7 @@
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║       .env Exposure & Secrets Recon Framework  v4.2                  ║
+║       .env Exposure & Secrets Recon Framework  v4.3                  ║
 ║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
 ╚══════════════════════════════════════════════════════════════════════╝
 """
@@ -26,6 +26,7 @@ import hashlib
 import sqlite3
 import argparse
 import threading
+import queue
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -75,7 +76,7 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.2"
+VERSION   = "4.3"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
@@ -90,8 +91,8 @@ BANNER = """[bold cyan]
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
 ║                                                            ║
-║     [bold white]  .env Exposure & Secrets Recon Framework  v4.2[/bold white][bold cyan]        ║
-║        [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]          ║
+║     [bold white]  .env Exposure & Secrets Recon Framework  v4.3[/bold white][bold cyan]        ║
+║       [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]           ║
 ╚════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
 # ─── SCAN MODULES ─────────────────────────────────────────────────────────────
@@ -552,6 +553,18 @@ _FP_RE_COMPILED = re.compile(
 _SENS_RE_COMPILED = {cat: re.compile(pat) for cat, pat in SENSITIVE_PATTERNS.items()}
 
 # (Pre-compiled regexes are defined below, after _strip_inline_flags is declared)
+
+# Pre-compiled soft-404 detector — avoids recompiling on every _fetch_page call
+# Each sub-pattern joined with | — re.IGNORECASE as compile flag (Windows Python 3.12 safe)
+_SOFT_404_RE = re.compile(
+    r'<title>[^<]*(404|not.?found|page.?not.?found|error)[^<]*</title>'
+    r'|(the page you (are looking for|requested) (could not be found|does not exist))'
+    r'|(404\s*[-–—]\s*(not found|page not found|file not found))'
+    r'|(this page (doesn.t|does not) exist)'
+    r'|(oops[.!]?\s+(something went wrong|page not found|we can.t find))'
+    r'|(no\s+such\s+file\s+or\s+directory)',
+    re.IGNORECASE
+)
 
 USER_AGENTS: List[str] = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
@@ -1149,6 +1162,13 @@ class EnvHunter:
         self.notifier: Optional[TelegramNotifier] = None
         if self.args.tg_token and self.args.tg_chat:
             self.notifier = TelegramNotifier(self.args.tg_token, self.args.tg_chat)
+        # Background queues — keep scan threads non-blocking
+        self._tg_queue    = queue.Queue()
+        self._print_queue = queue.Queue()
+        self._tg_worker   = threading.Thread(
+            target=self._tg_drain, daemon=True, name="tg-notifier"
+        )
+        self._tg_worker.start()
 
     def _build_session(self) -> requests.Session:
         from requests.adapters import HTTPAdapter
@@ -1280,7 +1300,7 @@ class EnvHunter:
                 url, headers=self._headers(),
                 allow_redirects=False,
                 stream=True,
-                timeout=(5, self.args.timeout),
+                timeout=(3, self.args.timeout),
             )
             if resp.status_code not in (200, 206):
                 resp.close()
@@ -1317,16 +1337,39 @@ class EnvHunter:
             return env
 
         except requests.exceptions.SSLError:
-            # Retry over plain HTTP
+            # Retry once over plain HTTP — non-recursive to avoid stack overflow
             if url.startswith("https://"):
-                return self._fetch_url(url.replace("https://", "http://"))
+                http_url = url.replace("https://", "http://", 1)
+                try:
+                    resp2 = self._local.session.get(
+                        http_url, headers=self._headers(),
+                        allow_redirects=False, stream=True,
+                        timeout=(3, self.args.timeout),
+                    )
+                    if resp2.status_code not in (200, 206):
+                        resp2.close(); return None
+                    try:
+                        raw2    = resp2.raw.read(65536, decode_content=True)
+                        content = raw2.decode("utf-8", errors="replace")
+                    finally:
+                        resp2.close()
+                    if not self._looks_like_env(content):
+                        return None
+                    ct = resp2.headers.get("Content-Type", "")
+                    env = ExposedEnv(http_url, resp2.status_code, len(raw2), ct)
+                    env.raw_content = content
+                    env.findings    = self._extract_findings(content)
+                    env.risk_level  = self._risk_level(env.findings)
+                    return env
+                except Exception:
+                    return None
         except (requests.exceptions.ConnectionError,
                 requests.exceptions.Timeout,
                 requests.exceptions.TooManyRedirects):
             pass
         except Exception as e:
             if self.args.verbose:
-                console.print(f"[dim red]  [!] {url}: {e}[/dim red]")
+                self._print_queue.put(f"[dim red]  [!] {url}: {e}[/dim red]")
         return None
 
     def _page_risk(self, module: str) -> str:
@@ -1361,12 +1404,28 @@ class EnvHunter:
         redirect_ok = {"server_status", "api_exposure", "php_info"}
 
         try:
+            # HEAD first: get status with zero body transfer.
+            # ~95% of probe paths return 404/403 — HEAD rejects them in <50ms
+            # with no body downloaded. Only 200s get a full GET + body read.
+            _allow_redir = (module in redirect_ok)
+            try:
+                _head = self._local.session.head(
+                    url, headers=self._headers(),
+                    allow_redirects=_allow_redir,
+                    timeout=(3, 3),
+                )
+                if _head.status_code not in (200, 206):
+                    return None
+            except Exception:
+                return None
+
+            # Status 200 confirmed — fetch body to run signature checks
             resp = self._local.session.get(
                 url,
                 headers=self._headers(),
-                allow_redirects=(module in redirect_ok),
+                allow_redirects=_allow_redir,
                 stream=True,
-                timeout=(5, self.args.timeout),
+                timeout=(3, self.args.timeout),
             )
 
             if resp.status_code not in (200, 206):
@@ -1402,18 +1461,9 @@ class EnvHunter:
             # Many sites return HTTP 200 for every non-existent URL
             # with a custom "Page Not Found" page. Reject these BEFORE
             # running signature checks to avoid false positives.
-            SOFT_404_PATTERNS = [
-                r'(?i)<title>[^<]*(404|not.?found|page.?not.?found|error)[^<]*</title>',
-                r'(?i)(the page you (are looking for|requested) (could not be found|does not exist))',
-                r'(?i)(404\s*[-–—]\s*(not found|page not found|file not found))',
-                r'(?i)(this page (doesn.t|does not) exist)',
-                r'(?i)(oops[.!]?\s+(something went wrong|page not found|we can.t find))',
-                r'(?i)(no\s+such\s+file\s+or\s+directory)',
-            ]
-            head = content[:3000]
-            for _s404 in SOFT_404_PATTERNS:
-                if re.search(_s404, head):
-                    return None  # Confirmed soft 404 — discard
+            # _SOFT_404_RE is pre-compiled at module level (single combined pattern)
+            if _SOFT_404_RE.search(content[:3000]):
+                return None  # Soft 404 — discard
 
             # ── Signature validation ───────────────────────────────────────────
             # OR logic: ANY one signature match = confirmed genuine exposure.
@@ -1485,8 +1535,27 @@ class EnvHunter:
             pass
         except Exception as e:
             if self.args.verbose:
-                console.print(f"[dim red]  [!] {url}: {e}[/dim red]")
+                self._print_queue.put(f"[dim red]  [!] {url}: {e}[/dim red]")
         return None
+
+    def _tg_drain(self):
+        """Background thread: sends Telegram notifications without blocking scan threads."""
+        while True:
+            item = self._tg_queue.get()
+            if item is None:
+                self._tg_queue.task_done()
+                break
+            fn, args, kwargs = item
+            try:
+                fn(*args, **kwargs)
+            except Exception:
+                pass
+            finally:
+                self._tg_queue.task_done()
+
+    def _tg_notify(self, fn, *args, **kwargs):
+        """Non-blocking: enqueue a Telegram call for the background worker."""
+        self._tg_queue.put((fn, args, kwargs))
 
     def scan_target(self, target: str) -> ScanResult:
         # Build a per-thread session using threading.local() storage.
@@ -1514,10 +1583,10 @@ class EnvHunter:
                     rc    = {"CRITICAL": "red", "HIGH": "yellow",
                              "MEDIUM": "cyan", "LOW": "green"}.get(env.risk_level, "white")
                     badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
-                    console.print(f"  {badge}[bold {rc}]✓ .env [{env.risk_level}] {url}[/bold {rc}]")
+                    self._print_queue.put(f"  {badge}[bold {rc}]✓ .env [{env.risk_level}] {url}[/bold {rc}]")
 
                 if self.notifier and is_new and env.risk_level != "LOW":
-                    self.notifier.send_finding(env, target, is_new=True)
+                    self._tg_notify(self.notifier.send_finding, env, target, is_new=True)
                     with self.lock:
                         self.stats["new_findings"] += 1
 
@@ -1542,12 +1611,12 @@ class EnvHunter:
                         rc    = {"CRITICAL": "red", "HIGH": "yellow",
                                  "MEDIUM": "cyan", "LOW": "green"}.get(page.risk_level, "white")
                         badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
-                        console.print(
+                        self._print_queue.put(
                             f"  {badge}[bold {rc}]✓ {page.label} [{page.risk_level}] {url}[/bold {rc}]"
                         )
 
                     if self.notifier and is_new and page.risk_level not in ("LOW",):
-                        self.notifier.send_page_finding(page, target)
+                        self._tg_notify(self.notifier.send_page_finding, page, target)
                         with self.lock:
                             self.stats["new_findings"] += 1
 
@@ -1604,6 +1673,12 @@ class EnvHunter:
                             console.print(f"[red]  [!] Scan error: {e}[/red]")
                     finally:
                         progress.advance(task)
+                        # Flush verbose output from completed target (main thread only)
+                        while True:
+                            try:
+                                console.print(self._print_queue.get_nowait())
+                            except queue.Empty:
+                                break
                         # Inter-TARGET delay: the full stealth delay now applies
                         # BETWEEN targets, not between each of 280 paths within one.
                         if self.args.delay:
@@ -1612,11 +1687,19 @@ class EnvHunter:
                             ))
 
         if self.notifier:
-            self.notifier.send_summary(self.stats)
+            # Enqueue final summary — _tg_queue.join() in close() waits for it
+            self._tg_notify(self.notifier.send_summary, self.stats)
 
         return self.results
 
     def close(self):
+        # Drain Telegram queue then stop worker cleanly
+        try:
+            self._tg_queue.join()
+            self._tg_queue.put(None)
+            self._tg_worker.join(timeout=5)
+        except Exception:
+            pass
         self.state_db.close()
         # Close main thread's local session if it exists
         try:
@@ -2191,8 +2274,8 @@ def interactive_wizard():
     # ── Scan options ──────────────────────────────────────────────────────────
     console.print("\n[bold cyan][ SCAN OPTIONS ][/bold cyan]")
     args.threads = prompt_int(
-        "  Concurrent threads        [recommended: 10-20]",
-        default=10, min_val=1, max_val=100
+        "  Concurrent threads        [10=safe | 25=fast | 50=aggressive]",
+        default=25, min_val=1, max_val=200
     )
     args.timeout = prompt_int(
         "  Request timeout (s)       [5=fast | 8=balanced | 15=thorough]",
@@ -2333,7 +2416,7 @@ def build_parser() -> argparse.ArgumentParser:
     disc.add_argument("--no-otx",           action="store_true", help="Disable AlienVault OTX")
 
     sc = p.add_argument_group("Scan Options")
-    sc.add_argument("-t", "--threads",   type=int,   default=10)
+    sc.add_argument("-t", "--threads",   type=int,   default=25,  metavar="N",  help="Worker threads (default: 25, max recommended: 50)")
     sc.add_argument("--timeout",         type=int,   default=10)
     sc.add_argument("--delay",           type=float, default=0.0)
     sc.add_argument("--proxy",           default=None, metavar="URL")
