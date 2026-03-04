@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-╔═════════════════════════════════════════════════════════════╗
-║                                                             ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗    ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║    ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║    ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║    ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║    ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ║
-║                                                             ║
-║       .env Exposure & Secrets Recon Framework  v4.6         ║
-║         Author : g33l0  |  Telegram : @x0x0h33l0            ║
-╚═════════════════════════════════════════════════════════════╝
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗   ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║   ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║   ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║   ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
+║                                                            ║
+║       .env Exposure & Secrets Recon Framework  v4.7        ║
+║          Author : g33l0  |  Telegram : @x0x0h33l0          ║
+╚════════════════════════════════════════════════════════════╝
 """
 
 # ── stdlib ────────────────────────────────────────────────────────────────────
@@ -76,24 +76,24 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.6"
+VERSION   = "4.7"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
 
 BANNER = """[bold cyan]
-╔════════════════════════════════════════════════════════════╗
-║                                                            ║
-║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗   ║
-║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║   ║
-║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║   ║
-║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║   ║
-║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║   ║
-║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ║
-║                                                            ║
-║   [bold white]   .env Exposure & Secrets Recon Framework  v4.4[/bold white][bold cyan]         ║
-║   [bold red]     Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]            ║
-╚════════════════════════════════════════════════════════════╝[/bold cyan]"""
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║   ███████╗███╗   ██╗██╗   ██╗██╗  ██╗██╗   ██╗███╗   ██╗           ║
+║   ██╔════╝████╗  ██║██║   ██║██║  ██║██║   ██║████╗  ██║           ║
+║   █████╗  ██╔██╗ ██║██║   ██║███████║██║   ██║██╔██╗ ██║           ║
+║   ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██╔══██║██║   ██║██║╚██╗██║           ║
+║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
+║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
+║                                                                      ║
+║   [bold white]  .env Exposure & Secrets Recon Framework  v4.7[/bold white][bold cyan]               ║
+║   [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]              ║
+╚══════════════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
 # ─── SCAN MODULES ─────────────────────────────────────────────────────────────
 # Each module is a named group of paths. The engine checks ALL enabled modules.
@@ -1316,8 +1316,9 @@ class EnvHunter:
         # KEY must be at least 1 char (changed from {2,} which required 3+, causing
         # keys like 'DB=', 'PW=' to be completely invisible to the scanner).
         real_kv = re.findall(
-            r'^[A-Z_][A-Z0-9_]*\s*=\s*[^\s#\n][^\n]{0,}',
-            text, re.MULTILINE
+            r'^[A-Za-z_][A-Za-z0-9_]*\s*=\s*[^\s#\n][^\n]{0,}',
+            text, re.MULTILINE  # [A-Za-z_] — catches Node/Python mixed-case keys
+                                # e.g. dbHost=, apiKey=, secretKey=
         )
         # Filter out lines that are placeholder values, not real secrets
         actual = [
@@ -1367,9 +1368,11 @@ class EnvHunter:
         try:
             resp = self._get_session().get(
                 url, headers=self._headers(),
-                allow_redirects=False,
+                allow_redirects=True,   # follow up to 3 hops — some servers
+                                        # 301/302 /.env → /.env/ or https://
                 stream=True,
-                timeout=(2, self.args.timeout),
+                timeout=(4, self.args.timeout),  # 4s connect: generous for
+                                                  # slow shared/cPanel hosts
             )
             if resp.status_code not in (200, 206):
                 resp.close()
@@ -1412,8 +1415,8 @@ class EnvHunter:
                 try:
                     resp2 = self._get_session().get(
                         http_url, headers=self._headers(),
-                        allow_redirects=False, stream=True,
-                        timeout=(2, self.args.timeout),
+                        allow_redirects=True, stream=True,
+                        timeout=(4, self.args.timeout),
                     )
                     if resp2.status_code not in (200, 206):
                         resp2.close()
@@ -1650,7 +1653,7 @@ class EnvHunter:
             try:
                 self._get_session().head(
                     _scheme_try + "/", headers=self._headers(),
-                    allow_redirects=True, timeout=(4, 6),
+                    allow_redirects=True, timeout=(5, 8),
                 )
                 _alive = True
                 break  # Any HTTP response = alive
@@ -2244,10 +2247,10 @@ class ScheduledRunner:
         original_handler = signal.getsignal(signal.SIGINT)
 
         def _stop_handler(sig, frame):
-            console.print("\n[yellow]  Scheduler stopped by user.[/yellow]")
             self._stop.set()
-            # Restore original so second Ctrl+C force-kills
+            # Restore original so a second Ctrl+C force-kills
             signal.signal(signal.SIGINT, original_handler)
+            _goodbye()  # show farewell banner
 
         signal.signal(signal.SIGINT, _stop_handler)
 
@@ -2503,23 +2506,27 @@ def interactive_wizard():
         console.print("[dim]  Aborted.[/dim]")
         return
 
-    hunter   = EnvHunter(args)
-    results  = hunter.run(all_targets)
-    reporter = Reporter(results, hunter.stats, args)
+    hunter = EnvHunter(args)
+    try:
+        results  = hunter.run(all_targets)
+        reporter = Reporter(results, hunter.stats, args)
 
-    reporter.print_summary_table()
-    reporter.print_findings()
-    reporter.print_page_findings()
-    reporter.print_stats()
+        reporter.print_summary_table()
+        reporter.print_findings()
+        reporter.print_page_findings()
+        reporter.print_stats()
 
-    Path(args.output).mkdir(parents=True, exist_ok=True)
-    ts   = datetime.now().strftime("%Y%m%d_%H%M%S")
-    base = os.path.join(args.output, f"envhunter_{ts}")
-    if args.json: reporter.save_json(base + ".json")
-    if args.txt:  reporter.save_txt(base  + ".txt")
-    if args.html: reporter.save_html(base + ".html")
-
-    hunter.close()
+        Path(args.output).mkdir(parents=True, exist_ok=True)
+        ts   = datetime.now().strftime("%Y%m%d_%H%M%S")
+        base = os.path.join(args.output, f"envhunter_{ts}")
+        if args.json: reporter.save_json(base + ".json")
+        if args.txt:  reporter.save_txt(base  + ".txt")
+        if args.html: reporter.save_html(base + ".html")
+    except KeyboardInterrupt:
+        _goodbye(hunter)
+        sys.exit(0)
+    finally:
+        hunter.close()
 
 
 # ─── CLI ARG PARSER ───────────────────────────────────────────────────────────
@@ -2582,6 +2589,28 @@ def build_parser() -> argparse.ArgumentParser:
 
     return p
 
+
+
+# ─── GRACEFUL EXIT ────────────────────────────────────────────────────────────
+def _goodbye(hunter=None):
+    """Print farewell banner and clean up on Ctrl+C / SIGINT."""
+    try:
+        console.print()
+        console.print(Panel(
+            f"[bold cyan]Thanks for using EnvHunter v{VERSION}![/bold cyan]\n"
+            f"[white]Stay safe, scan responsibly.[/white]\n"
+            f"[dim]— {AUTHOR}  |  {TG_HANDLE}[/dim]",
+            title="[bold yellow]👋  Goodbye[/bold yellow]",
+            border_style="yellow",
+        ))
+    except Exception:
+        print(f"\n\n  👋  Thanks for using EnvHunter v{VERSION}! Goodbye.\n")
+    finally:
+        if hunter is not None:
+            try:
+                hunter.close()
+            except Exception:
+                pass
 
 # ─── ENTRY POINT ──────────────────────────────────────────────────────────────
 def main():
@@ -2658,25 +2687,33 @@ def main():
         title="[bold cyan]◉ Scan Configuration[/bold cyan]", border_style="cyan"
     ))
 
-    hunter   = EnvHunter(args)
-    results  = hunter.run(all_targets)
-    reporter = Reporter(results, hunter.stats, args)
+    hunter = EnvHunter(args)
+    try:
+        results  = hunter.run(all_targets)
+        reporter = Reporter(results, hunter.stats, args)
 
-    if not args.quiet:
-        reporter.print_summary_table()
-        reporter.print_findings()
-        reporter.print_page_findings()
-    reporter.print_stats()
+        if not args.quiet:
+            reporter.print_summary_table()
+            reporter.print_findings()
+            reporter.print_page_findings()
+        reporter.print_stats()
 
-    Path(args.output).mkdir(parents=True, exist_ok=True)
-    ts   = datetime.now().strftime("%Y%m%d_%H%M%S")
-    base = os.path.join(args.output, f"envhunter_{ts}")
-    if args.json: reporter.save_json(base + ".json")
-    if args.txt:  reporter.save_txt(base  + ".txt")
-    if args.html: reporter.save_html(base + ".html")
-
-    hunter.close()
+        Path(args.output).mkdir(parents=True, exist_ok=True)
+        ts   = datetime.now().strftime("%Y%m%d_%H%M%S")
+        base = os.path.join(args.output, f"envhunter_{ts}")
+        if args.json: reporter.save_json(base + ".json")
+        if args.txt:  reporter.save_txt(base  + ".txt")
+        if args.html: reporter.save_html(base + ".html")
+    except KeyboardInterrupt:
+        _goodbye(hunter)
+        sys.exit(0)
+    finally:
+        hunter.close()
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        _goodbye()
+        sys.exit(0)
