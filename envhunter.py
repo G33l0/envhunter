@@ -10,7 +10,7 @@
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║       .env Exposure & Secrets Recon Framework  v4.8                  ║
+║       .env Exposure & Secrets Recon Framework  v4.9                  ║
 ║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
 ╚══════════════════════════════════════════════════════════════════════╝
 """
@@ -76,7 +76,7 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.8"
+VERSION   = "4.9"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
@@ -91,7 +91,7 @@ BANNER = """[bold cyan]
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║   [bold white]  .env Exposure & Secrets Recon Framework  v4.4[/bold white][bold cyan]               ║
+║   [bold white]  .env Exposure & Secrets Recon Framework  v4.9[/bold white][bold cyan]               ║
 ║   [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]              ║
 ╚══════════════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
@@ -166,11 +166,6 @@ SCAN_MODULES: dict = {
         
                 "/admin/config",
                 "/manager/html",
-                "/phpmyadmin/",
-                "/pma/",
-                "/_phpmyadmin/",
-                "/db/",
-                "/dbadmin/",
                 "/sql/",],
     },
 
@@ -448,13 +443,21 @@ MODULE_SIGNATURES: dict = {
     # flask-admin/django-admin on a login page is NOT a finding — we need
     # the actual admin content (list views, model data) to be exposed.
     "admin_panels": [
-        r'(?i)(cpanel|whm_login|plesk\s+login|directadmin)',
-        r'(?i)<title>[^<]*(cpanel|webmin|plesk|directadmin|WHM)[^<]*</title>',
+        # ── cPanel / WHM: require elements UNIQUE to the real login interface.
+        # "cPanel Redirect" page also contains the word "cpanel" — do NOT match
+        # on the bare word. Require the actual login form input names or the
+        # cPanel logo/header that only appear on the real panel, not the redirect.
+        r'(?i)(id="login_form"[^>]*action="[^"]*cpanel|name="user"[^>]*cpanel)',
+        r'(?i)(cpsess|cpanel_jsonapi|WHM\s+\d+|whostmgr\.cgi)',
+        r'(?i)<title>[^<]*(WHM|WebHost\s+Manager)[^<]*</title>',
+        r'(?i)(id="whmlogin"|class="whm-|whm_username)',
+        # ── Plesk / DirectAdmin: specific login form identifiers
+        r'(?i)(name="send"[^>]*value="Log In"[^>]*id="plesk|plesk\.com/modules)',
+        r'(?i)(directadmin\.com|action="/CMD_LOGIN")',
         r'(?i)(webmin\.cgi|webmin/index\.cgi)',
+        # ── CMS admin panels
         r'(?i)(Joomla\s+Administration\s+Login)',
-        # Django admin: only fire on the actual admin list/change pages, NOT login
         r'(?i)<title>[^<]*\|\s*Django\s+site\s+admin[^<]*</title>',
-        # Flask-Admin: only fire on pages with the actual admin panel nav
         r'(?i)class="flask-admin\b',
     ],
 
@@ -1468,24 +1471,20 @@ class EnvHunter:
                     self._print_queue.put(f"[dim red]  [!] {fetch_url}: {e}[/dim red]")
                 return None
 
-        try:
-            # Primary attempt — no redirects (see docstring for why)
-            result = _try_fetch(url, redirects=False)
-            if result is not None:
-                return result
+        # Primary attempt — no redirects (see docstring for why)
+        result = _try_fetch(url, redirects=False)
+        if result is not None:
+            return result
 
-            # SSL fallback: retry once over plain HTTP — non-recursive
-            if url.startswith("https://"):
-                http_url = url.replace("https://", "http://", 1)
-                return _try_fetch(http_url, redirects=False)
+        # HTTP fallback: always try plain HTTP if HTTPS returned nothing.
+        # _try_fetch() catches all exceptions internally (SSL, connection, timeout)
+        # and returns None — so no outer try/except is needed here.
+        # This also handles the case where the server has a broken SSL cert
+        # but serves the .env file fine over plain HTTP.
+        if url.startswith("https://"):
+            http_url = url.replace("https://", "http://", 1)
+            return _try_fetch(http_url, redirects=False)
 
-        except requests.exceptions.SSLError:
-            if url.startswith("https://"):
-                http_url = url.replace("https://", "http://", 1)
-                return _try_fetch(http_url, redirects=False)
-        except Exception as e:
-            if self.args.verbose:
-                self._print_queue.put(f"[dim red]  [!] {url}: {e}[/dim red]")
         return None
 
     def _page_risk(self, module: str) -> str:
@@ -1528,7 +1527,7 @@ class EnvHunter:
                 _head = self._get_session().head(
                     url, headers=self._headers(),
                     allow_redirects=_allow_redir,
-                    timeout=(2, 2),
+                    timeout=(4, 4),  # 4s connect+read: cPanel/shared hosts are slow
                 )
                 _head.close()
                 if _head.status_code not in (200, 206):
@@ -1542,7 +1541,7 @@ class EnvHunter:
                 headers=self._headers(),
                 allow_redirects=_allow_redir,
                 stream=True,
-                timeout=(2, self.args.timeout),
+                timeout=(4, self.args.timeout),  # 4s connect for slow hosts
             )
 
             if resp.status_code not in (200, 206):
@@ -1773,9 +1772,13 @@ class EnvHunter:
                 return None
 
         # ── Dispatch all paths in parallel (inner pool per target) ──────────
-        # 10 path workers × 25 outer target threads = 250 concurrent connections
-        # A dead target now completes in ~(277/10 batches × 2s) = ~56s instead of 554s
-        PATH_WORKERS = getattr(self.args, "path_workers", 10)
+        # All env AND page paths run in the SAME thread pool simultaneously —
+        # there are no separate phases. env paths are NOT prioritised over page
+        # paths; as_completed() processes whichever finishes first.
+        #
+        # PATH_WORKERS scales to work list size: always at least 10 workers,
+        # but cap at 50 so we don't overwhelm slow shared hosts.
+        PATH_WORKERS = min(max(getattr(self.args, "path_workers", 10), 10), 50)
         with ThreadPoolExecutor(max_workers=PATH_WORKERS) as inner:
             for fut in as_completed([inner.submit(_probe, item) for item in work]):
                 try:
