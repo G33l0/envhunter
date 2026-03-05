@@ -91,7 +91,7 @@ BANNER = """[bold cyan]
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║   [bold white]  .env Exposure & Secrets Recon Framework  v4.4[/bold white][bold cyan]               ║
+║   [bold white]  .env Exposure & Secrets Recon Framework  v4.11[/bold white][bold cyan]               ║
 ║   [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]              ║
 ╚══════════════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
