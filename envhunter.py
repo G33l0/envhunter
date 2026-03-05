@@ -10,7 +10,7 @@
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║       .env Exposure & Secrets Recon Framework  v4.9                  ║
+║       .env Exposure & Secrets Recon Framework  v4.11                  ║
 ║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
 ╚══════════════════════════════════════════════════════════════════════╝
 """
@@ -76,7 +76,7 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.9"
+VERSION   = "4.11"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
@@ -91,7 +91,7 @@ BANNER = """[bold cyan]
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║   [bold white]  .env Exposure & Secrets Recon Framework  v4.9[/bold white][bold cyan]               ║
+║   [bold white]  .env Exposure & Secrets Recon Framework  v4.4[/bold white][bold cyan]               ║
 ║   [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]              ║
 ╚══════════════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
@@ -575,12 +575,17 @@ FP_MARKERS = [
     r'(?i)=\s*\[',                # array placeholder
     r'(?i)_example\b',            # example suffix
     r'(?i)_placeholder\b',        # placeholder suffix
-    r'(?i)change.?me',             # change-me / change_me_please placeholder
+    r'(?i)(change.?me|changethis|=\s*change\w+)',  # change-me / changethis / change_value placeholders
     r'(?i)xxx+',                  # xxx placeholder
     r'(?i)=\s*enter.{0,20}here',  # "enter value here" placeholder
     r'(?i)=\s*replace.{0,20}this',# "replace this" placeholder
+    r'(?i)=\s*replace.?me',        # REPLACE_ME / replace-me
     r'(?i)=\s*todo\b',            # TODO placeholder
     r'(?i)=\s*\*+\s*$',          # asterisks only (redacted display)
+    r'(?i)=\s*(password|secret|root|admin|user|test|example|dummy|sample)\s*$',  # literal placeholder values
+    r'(?i)your[\-_]',              # your-secret-key / your_secret variants
+    r'(?i)some.?random',            # SomeRandomString / some_random_value
+    r'(?i)example[_\-]',           # example_password / example-key
     r'(?i)^(login|username|password|user|email)\s*$',  # standalone words (not KEY=val)
 ]
 
@@ -608,8 +613,12 @@ _SOFT_404_RE = re.compile(
     r'<title>[^<]*(404|not.?found|page.?not.?found|error)[^<]*</title>'
     r'|(the page you (are looking for|requested) (could not be found|does not exist))'
     r'|(404\s*[-–—]\s*(not found|page not found|file not found))'
+    r'|(\b404\s+not\s+found\b)'                          # bare '404 Not Found'
+    r'|(page\s+not\s+found\b)'                            # 'Page Not Found | Title'
     r'|(this page (doesn.t|does not) exist)'
-    r'|(oops[.!]?\s+(something went wrong|page not found|we can.t find))'
+    r'|(sorry[,.]?\s+that page (doesn.t|does not) exist)'  # 'Sorry, that page doesn\'t exist'
+    r'|(oops[.!]?\s+(something went wrong|page not found|we can.t find|couldn.t find))'
+    r'|(oops[!.]+\s+we\s+couldn.t\s+find)'               # 'Oops! We couldn\'t find'
     r'|(no\s+such\s+file\s+or\s+directory)'
     r'|(<h[12][^>]*>\s*(404|page\s+not\s+found|not\s+found)[^<]*</h[12]>)',
     re.IGNORECASE
@@ -1179,6 +1188,13 @@ class TelegramNotifier:
     def send_page_finding(self, page, target: str) -> bool:
         emoji  = {"CRITICAL": "🔴", "HIGH": "🟠", "MEDIUM": "🟡", "LOW": "🟢"}.get(page.risk_level, "⚪")
         ev     = "\n".join(f"  • <code>{e}</code>" for e in page.evidence[:5]) or "  • <i>Confirmed accessible</i>"
+        context_map = {
+            "CRITICAL": "⚠️ Credentials/data directly readable — zero auth required.",
+            "HIGH":     "⚠️ Sensitive structure exposed — likely contains secrets.",
+            "MEDIUM":   "ℹ️ Login panel reachable — attacker still needs a password.",
+            "LOW":      "ℹ️ Info disclosure only — versions or schema, no credentials.",
+        }
+        context = context_map.get(page.risk_level, "")
         msg = (
             f"🆕 <b>NEW FINDING</b>\n"
             f"{emoji} <b>EnvHunter Alert — {page.risk_level}</b>\n"
@@ -1188,6 +1204,7 @@ class TelegramNotifier:
             f"📂 <b>Type:</b> {page.label}\n"
             f"📊 <b>HTTP:</b> {page.status_code}  |  📏 <b>Size:</b> {page.content_length}B\n"
             f"🕐 <b>Time:</b> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n"
+            f"\n💬 <i>{context}</i>\n"
             f"\n🔍 <b>Evidence:</b>\n{ev}\n"
             f"\n<i>EnvHunter v{VERSION} | {AUTHOR} | {TG_HANDLE}</i>"
         )
@@ -1327,8 +1344,13 @@ class EnvHunter:
         actual = [
             ln for ln in real_kv
             if not re.search(
-                r'(?i)(=\s*null\b|=\s*false\b|=\s*true\b|=\s*<|=\s*\{|'
-                r'change.?me|your_|_example|_placeholder|xxx+|=\s*$)',
+                r'(?i)('
+                r'=\s*null\b|=\s*false\b|=\s*true\b|=\s*<|=\s*\{|'
+                r'change.?me|changethis|=\s*change\w*|your_|_example|_placeholder|xxx+|=\s*$|'
+                # Common placeholder values used in docs / templates
+                r'=\s*(password|secret|root|user|admin|test|example|dummy|sample)\s*$|'
+                r'example\.com|=\s*replace.?me|some.?random'
+                r')',
                 ln
             )
         ]
@@ -1336,14 +1358,19 @@ class EnvHunter:
         if len(actual) >= 2:
             return True
         # Secondary check: even 1 line is enough if it matches a known
-        # secret pattern — catches minimal .env files (e.g. single-key Laravel)
+        # secret pattern AND the value is not a placeholder.
+        # e.g. DB_PASSWORD=realSecret99! → True
+        #      SECRET_KEY=your-secret-key-here → False (_is_fp catches it)
         if len(actual) == 1:
             high_signal = re.search(
                 r'(?i)(password|secret|api_key|apikey|token|private_key'
                 r'|stripe|aws_secret|jwt|auth_key|access_key)',
                 actual[0]
             )
-            return bool(high_signal)
+            if not high_signal:
+                return False
+            # Guard: reject if the single line itself looks like a placeholder
+            return not _FP_RE_COMPILED.search(actual[0])
         return False
 
     def _is_fp(self, line: str) -> bool:
@@ -1488,12 +1515,37 @@ class EnvHunter:
         return None
 
     def _page_risk(self, module: str) -> str:
-        """Assign risk level based on which module detected the exposure."""
-        critical = {"phpmyadmin", "backup_files", "ssh_keys", "git_exposure"}
-        high     = {"admin_panels", "config_files", "devops_files", "php_info"}
-        medium   = {"server_status", "log_files", "wordpress", "api_exposure",
-                    "package_files"}
-        low      = {"env_files"}  # handled separately by _fetch_url
+        """
+        Rate severity by what is DIRECTLY EXPOSED right now — not what an
+        attacker could do next.
+
+        CRITICAL  Credentials or private data readable with zero authentication.
+                  config_files : signature requires actual DB_PASSWORD=/API_KEY=
+                                 with a real value present in the file
+                  backup_files : SQL dump confirmed (INSERT INTO / CREATE TABLE)
+                  ssh_keys     : private key header confirmed in response body
+
+        HIGH      Sensitive structure exposed; likely contains secrets on inspection.
+                  git_exposure : source code + full commit history accessible
+                  devops_files : docker-compose/Dockerfile (frequently has passwords)
+
+        MEDIUM    Interface is reachable but requires a further step to exploit.
+                  phpmyadmin   : login page up — attacker still needs credentials
+                  admin_panels : cPanel/WHM/Plesk login — not unauthenticated access
+                  php_info     : server internals visible, no credentials directly
+                  log_files    : stack traces may leak tokens, not guaranteed
+                  wordpress    : user list / XML-RPC exposed, not passwords
+
+        LOW       Pure info disclosure — versions, API schema, dependency lists.
+                  server_status : connection counts, server version
+                  api_exposure  : Swagger/OpenAPI schema only
+                  package_files : dependency list only
+        """
+        critical = {"config_files", "backup_files", "ssh_keys"}
+        high     = {"git_exposure", "devops_files"}
+        medium   = {"phpmyadmin", "admin_panels", "php_info",
+                    "log_files", "wordpress"}
+        # server_status, api_exposure, package_files → LOW (info disclosure only)
         if module in critical: return "CRITICAL"
         if module in high:     return "HIGH"
         if module in medium:   return "MEDIUM"
@@ -1761,7 +1813,9 @@ class EnvHunter:
                         rc = {"CRITICAL":"red","HIGH":"yellow","MEDIUM":"cyan","LOW":"green"}.get(page.risk_level,"white")
                         badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
                         self._print_queue.put(f"  {badge}[bold {rc}]✓ {page.label} [{page.risk_level}] {url}[/bold {rc}]")
-                    if self.notifier and is_new and page.risk_level not in ("LOW",):
+                    # Only alert on HIGH/CRITICAL — MEDIUM are login pages
+                    # that need a password, LOW is pure info disclosure.
+                    if self.notifier and is_new and page.risk_level in ("HIGH", "CRITICAL"):
                         self._tg_notify(self.notifier.send_page_finding, page, target)
                         with self.lock:
                             self.stats["new_findings"] += 1
@@ -2007,10 +2061,18 @@ class Reporter:
         for r in page_results:
             for page in r.exposed_pages:
                 rc = self._rc(page.risk_level)
+                _ctx = {
+                    "CRITICAL": "Credentials/data directly readable — no auth required",
+                    "HIGH":     "Sensitive structure — likely contains secrets",
+                    "MEDIUM":   "Login panel accessible — requires credentials to exploit",
+                    "LOW":      "Info disclosure — versions/schema, no credentials",
+                }.get(page.risk_level, "")
                 console.print(
                     f"\n  [{rc}]■[/{rc}] [bold white]{page.label}[/bold white]  "
                     f"[{rc}][{page.risk_level}][/{rc}]"
                 )
+                if _ctx:
+                    console.print(f"    [dim]→ {_ctx}[/dim]")
                 console.print(f"    [bold white]URL   :[/bold white] {page.url}")
                 console.print(f"    [bold white]HTTP  :[/bold white] {page.status_code}  "
                               f"[bold white]Size:[/bold white] {page.content_length}B")
@@ -2219,7 +2281,9 @@ class Reporter:
 
   <h2 style="color:#58a6ff;margin:30px 0 10px">Web Exposure Findings</h2>
   <p style="color:#8b949e;font-size:.85em;margin-bottom:12px">
-    phpMyAdmin, Admin Panels, Debug Pages, Config Files, Git Repos, Backups, SSH Keys, and more
+    🔴 CRITICAL: Config files with credentials, SQL backups, SSH keys &nbsp;|&nbsp;
+    🟠 HIGH: Git repos, DevOps files &nbsp;|&nbsp;
+    🟡 MEDIUM: Login panels (phpMyAdmin, cPanel, admin) — require credentials to exploit
   </p>
   <table>
     <thead>
