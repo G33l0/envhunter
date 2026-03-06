@@ -10,7 +10,7 @@
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║       .env Exposure & Secrets Recon Framework  v4.11                  ║
+║       .env Exposure & Secrets Recon Framework  v4.12                  ║
 ║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
 ╚══════════════════════════════════════════════════════════════════════╝
 """
@@ -76,7 +76,7 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.11"
+VERSION   = "4.12"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
@@ -91,7 +91,7 @@ BANNER = """[bold cyan]
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║   [bold white]  .env Exposure & Secrets Recon Framework  v4.11[/bold white][bold cyan]               ║
+║   [bold white]  .env Exposure & Secrets Recon Framework  v4.12[/bold white][bold cyan]               ║
 ║   [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]              ║
 ╚══════════════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
@@ -1152,59 +1152,83 @@ class TelegramNotifier:
 
     def send_finding(self, env: ExposedEnv, target: str, is_new: bool = True) -> bool:
         emoji = {"CRITICAL": "🔴", "HIGH": "🟠", "MEDIUM": "🟡", "LOW": "🟢"}.get(env.risk_level, "⚪")
-        badge = "🆕 <b>NEW FINDING</b>\n" if is_new else ""
+        now_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+        badge = "🆕 <b>NEW FINDING</b>\n" if is_new else "🔄 <b>RE-SCAN MATCH</b>\n"
+        # Risk context for .env findings
+        env_context_map = {
+            "CRITICAL": "Real credentials/keys confirmed in this file — attacker can use these directly.",
+            "HIGH":     "Payment or mail credentials exposed — financial or communication risk.",
+            "MEDIUM":   "General secrets present — lower impact but still sensitive.",
+            "LOW":      "File accessible but no sensitive keywords matched — review manually.",
+        }
+        env_context = env_context_map.get(env.risk_level, "")
         if env.findings:
             cats = "\n".join(f"  • <code>{c}</code>" for c in env.findings.keys())
         else:
             cats = "  • <i>No sensitive keywords matched</i>"
         msg = (
             f"{badge}"
-            f"{emoji} <b>EnvHunter Alert — {env.risk_level}</b>\n"
+            f"{emoji} <b>.env Exposed — {env.risk_level}</b>\n"
             f"━━━━━━━━━━━━━━━━━━━━━━\n"
             f"🎯 <b>Target:</b> <code>{target}</code>\n"
             f"🔗 <b>URL:</b> <code>{env.url}</code>\n"
             f"📊 <b>HTTP:</b> {env.status_code}  |  📏 <b>Size:</b> {env.content_length}B\n"
-            f"🕐 <b>Time:</b> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n"
+            f"⏱ <b>Found at:</b> {now_ts}\n"
+            f"\n{emoji} <b>Risk [{env.risk_level}]:</b> <i>{env_context}</i>\n"
             f"\n🔑 <b>Secrets Detected:</b>\n{cats}\n"
             f"\n<i>EnvHunter v{VERSION} | {AUTHOR} | {TG_HANDLE}</i>"
         )
         return self._send(msg)
 
     def send_summary(self, stats: dict) -> bool:
+        exposed   = stats.get("exposed", 0)
+        pages     = stats.get("pages_found", 0)
+        critical  = stats.get("critical", 0)
+        new_finds = stats.get("new_findings", 0)
+        # Status line: highlight if anything found
+        if critical > 0:
+            headline = f"🔴 <b>CRITICAL FINDINGS — {critical} critical items</b>"
+        elif new_finds > 0:
+            headline = f"⚠️ <b>{new_finds} new finding(s) — review required</b>"
+        else:
+            headline = "✅ <b>Scan complete — no new findings</b>"
         msg = (
             f"📋 <b>EnvHunter — Scan Complete</b>\n"
             f"━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"{headline}\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━\n"
             f"🎯 Targets Scanned : <b>{stats.get('scanned',0)}</b>\n"
             f"🔌 Unreachable      : <b>{stats.get('unreachable',0)}</b>\n"
-            f"🚨 .env Exposed    : <b>{stats.get('exposed',0)}</b>\n"
-            f"🌐 Pages Exposed   : <b>{stats.get('pages_found',0)}</b>\n"
-            f"🔴 Critical        : <b>{stats.get('critical',0)}</b>\n"
-            f"🆕 New Findings    : <b>{stats.get('new_findings',0)}</b>\n"
-            f"🕐 Completed       : {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n"
+            f"🚨 .env Exposed    : <b>{exposed}</b>\n"
+            f"🌐 Pages Exposed   : <b>{pages}</b>\n"
+            f"🔴 Critical        : <b>{critical}</b>\n"
+            f"🆕 New Findings    : <b>{new_finds}</b>\n"
+            f"🕐 Completed       : {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}\n"
             f"\n<i>EnvHunter v{VERSION} | {AUTHOR} | {TG_HANDLE}</i>"
         )
         return self._send(msg)
 
     def send_page_finding(self, page, target: str) -> bool:
         emoji  = {"CRITICAL": "🔴", "HIGH": "🟠", "MEDIUM": "🟡", "LOW": "🟢"}.get(page.risk_level, "⚪")
+        now_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
         ev     = "\n".join(f"  • <code>{e}</code>" for e in page.evidence[:5]) or "  • <i>Confirmed accessible</i>"
+        # Risk context: explains what this finding actually means
         context_map = {
-            "CRITICAL": "⚠️ Credentials/data directly readable — zero auth required.",
-            "HIGH":     "⚠️ Sensitive structure exposed — likely contains secrets.",
-            "MEDIUM":   "ℹ️ Login panel reachable — attacker still needs a password.",
-            "LOW":      "ℹ️ Info disclosure only — versions or schema, no credentials.",
+            "CRITICAL": ("🚨 URGENT", "Credentials or sensitive data directly readable — no authentication required. Immediate action needed."),
+            "HIGH":     ("⚠️ HIGH",   "Sensitive structure exposed — source code, configs or secrets likely present. Manual inspection recommended."),
+            "MEDIUM":   ("🔵 MEDIUM", "Login interface publicly reachable — an attacker still needs valid credentials to exploit this."),
+            "LOW":      ("ℹ️ INFO",   "Version or schema disclosure only — no direct credential exposure, but useful for attacker reconnaissance."),
         }
-        context = context_map.get(page.risk_level, "")
+        sev_label, context = context_map.get(page.risk_level, ("", ""))
         msg = (
-            f"🆕 <b>NEW FINDING</b>\n"
-            f"{emoji} <b>EnvHunter Alert — {page.risk_level}</b>\n"
+            f"🆕 <b>NEW FINDING — {sev_label}</b>\n"
+            f"{emoji} <b>{page.label}</b>\n"
             f"━━━━━━━━━━━━━━━━━━━━━━\n"
             f"🎯 <b>Target:</b> <code>{target}</code>\n"
             f"🔗 <b>URL:</b> <code>{page.url}</code>\n"
-            f"📂 <b>Type:</b> {page.label}\n"
             f"📊 <b>HTTP:</b> {page.status_code}  |  📏 <b>Size:</b> {page.content_length}B\n"
-            f"🕐 <b>Time:</b> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n"
-            f"\n💬 <i>{context}</i>\n"
+            f"⏱ <b>Found at:</b> {now_ts}\n"
+            f"\n{emoji} <b>Risk [{page.risk_level}]:</b> <i>{context}</i>\n"
             f"\n🔍 <b>Evidence:</b>\n{ev}\n"
             f"\n<i>EnvHunter v{VERSION} | {AUTHOR} | {TG_HANDLE}</i>"
         )
@@ -1813,12 +1837,13 @@ class EnvHunter:
                         rc = {"CRITICAL":"red","HIGH":"yellow","MEDIUM":"cyan","LOW":"green"}.get(page.risk_level,"white")
                         badge = "[bold green][NEW][/bold green]   " if is_new else "[dim][KNOWN][/dim] "
                         self._print_queue.put(f"  {badge}[bold {rc}]✓ {page.label} [{page.risk_level}] {url}[/bold {rc}]")
-                    # Only alert on HIGH/CRITICAL — MEDIUM are login pages
-                    # that need a password, LOW is pure info disclosure.
-                    if self.notifier and is_new and page.risk_level in ("HIGH", "CRITICAL"):
-                        self._tg_notify(self.notifier.send_page_finding, page, target)
+                    # Count ALL new page findings, regardless of risk level.
+                    # TG alert fires for every new finding — risk context explains severity.
+                    if is_new:
                         with self.lock:
                             self.stats["new_findings"] += 1
+                        if self.notifier:
+                            self._tg_notify(self.notifier.send_page_finding, page, target)
                     return ("page", page)
             except Exception as _probe_err:
                 if self.args.verbose:
@@ -2061,12 +2086,13 @@ class Reporter:
         for r in page_results:
             for page in r.exposed_pages:
                 rc = self._rc(page.risk_level)
-                _ctx = {
+                _ctx_map = {
                     "CRITICAL": "Credentials/data directly readable — no auth required",
-                    "HIGH":     "Sensitive structure — likely contains secrets",
-                    "MEDIUM":   "Login panel accessible — requires credentials to exploit",
-                    "LOW":      "Info disclosure — versions/schema, no credentials",
-                }.get(page.risk_level, "")
+                    "HIGH":     "Sensitive structure exposed — likely contains secrets",
+                    "MEDIUM":   "Login interface reachable — attacker needs credentials",
+                    "LOW":      "Info disclosure only — versions/schema, no credentials",
+                }
+                _ctx = _ctx_map.get(page.risk_level, "")
                 console.print(
                     f"\n  [{rc}]■[/{rc}] [bold white]{page.label}[/bold white]  "
                     f"[{rc}][{page.risk_level}][/{rc}]"
