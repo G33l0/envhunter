@@ -10,7 +10,7 @@
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║       .env Exposure & Secrets Recon Framework  v4.12                  ║
+║       .env Exposure & Secrets Recon Framework  v4.13                  ║
 ║               Author : g33l0  |  Telegram : @x0x0h33l0              ║
 ╚══════════════════════════════════════════════════════════════════════╝
 """
@@ -34,10 +34,11 @@ from typing import Optional, List
 
 # ── signal: SIGINT is the only cross-platform-safe signal ────────────────────
 import signal
+import html
+import importlib
 
 # ── third-party: caught with helpful messages if missing ─────────────────────
 def _require(pkg, install_name=None):
-    import importlib, sys, os
     try:
         return importlib.import_module(pkg)
     except ImportError:
@@ -76,7 +77,7 @@ init(autoreset=True)
 console = Console()
 
 # ─── META ─────────────────────────────────────────────────────────────────────
-VERSION   = "4.12"
+VERSION   = "4.13"
 AUTHOR    = "g33l0"
 TG_HANDLE = "@x0x0h33l0"
 DB_PATH   = "envhunter_state.db"
@@ -91,7 +92,7 @@ BANNER = """[bold cyan]
 ║   ███████╗██║ ╚████║ ╚████╔╝ ██║  ██║╚██████╔╝██║ ╚████║           ║
 ║   ╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝           ║
 ║                                                                      ║
-║   [bold white]  .env Exposure & Secrets Recon Framework  v4.12[/bold white][bold cyan]               ║
+║   [bold white]  .env Exposure & Secrets Recon Framework  v4.13[/bold white][bold cyan]              ║
 ║   [bold red]  Author : g33l0[/bold red][bold cyan]  |  [bold green]Telegram : @x0x0h33l0[/bold green][bold cyan]              ║
 ╚══════════════════════════════════════════════════════════════════════╝[/bold cyan]"""
 
@@ -880,18 +881,6 @@ class StateDB:
             self.conn.commit()
             return cur.rowcount > 0  # True = new finding, False = already known
 
-    # Backwards-compat aliases used by scan_target
-    def is_new(self, env: ExposedEnv) -> bool:
-        fp = self._fp(env)
-        with self.lock:
-            row = self.conn.execute(
-                "SELECT 1 FROM seen_findings WHERE fingerprint=?", (fp,)
-            ).fetchone()
-        return row is None
-
-    def mark_seen(self, env: ExposedEnv):
-        self.mark_seen_atomic(env)  # delegates; return value discarded
-
     def get_history(self) -> list:
         with self.lock:
             return self.conn.execute(
@@ -902,14 +891,6 @@ class StateDB:
     def _fp_page(self, page) -> str:
         raw = page.url + "|page|" + page.module
         return hashlib.sha256(raw.encode()).hexdigest()
-
-    def is_new_page(self, page) -> bool:
-        fp = self._fp_page(page)
-        with self.lock:
-            row = self.conn.execute(
-                "SELECT 1 FROM seen_findings WHERE fingerprint=?", (fp,)
-            ).fetchone()
-        return row is None
 
     def mark_seen_page_atomic(self, page) -> bool:
         """Atomically record a page finding. Returns True if it was new."""
@@ -927,9 +908,6 @@ class StateDB:
                 )
             self.conn.commit()
             return cur.rowcount > 0
-
-    def mark_seen_page(self, page):
-        self.mark_seen_page_atomic(page)
 
     def close(self):
         try:
@@ -1624,6 +1602,10 @@ class EnvHunter:
                 resp.close()
                 return None
 
+            # Capture status_code before entering body-read try/finally.
+            # This ensures it is always bound when ExposedPage is constructed.
+            _status_code = resp.status_code
+
             # Read at most 16KB — signature matching only uses first 8KB anyway.
             # Capping here prevents downloading full pages for every probe.
             try:
@@ -1712,7 +1694,7 @@ class EnvHunter:
                     return None
 
             label            = SCAN_MODULES.get(module, {}).get("label", module)
-            page             = ExposedPage(url, resp.status_code, len(raw_bytes),
+            page             = ExposedPage(url, _status_code, len(raw_bytes),
                                            module, label, evidence)
             page.risk_level  = self._page_risk(module)
             page.raw_snippet = content[:500]
@@ -2210,12 +2192,12 @@ class Reporter:
                         fh += f"&nbsp;&nbsp;<code>{safe_ln[:120]}</code><br>"
                 if not fh:
                     fh = "<em>No sensitive keywords matched</em>"
-                safe_url    = env.url.replace('"', "&quot;")
+                safe_url    = html.escape(env.url, quote=True)
                 safe_target = r.target.replace("<", "&lt;").replace(">", "&gt;")
                 rows += (
                     f"<tr>"
                     f"<td>{safe_target}<br><small class='src'>[{r.source}]</small></td>"
-                    f"<td><a href=\"{safe_url}\" target=\"_blank\">{env.url}</a></td>"
+                    f"<td><a href=\"{safe_url}\" target=\"_blank\">{html.escape(env.url)}</a></td>"
                     f"<td>{env.status_code}</td>"
                     f"<td>{env.content_length}</td>"
                     f"<td><span class='badge {rc}'>{env.risk_level}</span></td>"
@@ -2229,11 +2211,11 @@ class Reporter:
                 rc2   = {"CRITICAL":"critical","HIGH":"high","MEDIUM":"medium","LOW":"low"}.get(page.risk_level,"low")
                 evh   = "".join(f"<code>{ev.replace('<','&lt;').replace('>','&gt;')}</code><br>" for ev in page.evidence[:5]) or "<em>Accessible</em>"
                 safe_t = r.target.replace("<","&lt;").replace(">","&gt;")
-                safe_u = page.url.replace('"', "&quot;")
+                safe_u = html.escape(page.url, quote=True)
                 page_rows += (
                     f"<tr>"
                     f"<td>{safe_t}<br><small class='src'>[{r.source}]</small></td>"
-                    f"<td><a href=\"{safe_u}\" target=\"_blank\">{page.url}</a></td>"
+                    f"<td><a href=\"{safe_u}\" target=\"_blank\">{html.escape(page.url)}</a></td>"
                     f"<td>{page.status_code}</td>"
                     f"<td>{page.content_length}</td>"
                     f"<td><span class='badge {rc2}'>{page.risk_level}</span></td>"
@@ -2350,27 +2332,31 @@ class ScheduledRunner:
             console.print("[yellow]  No targets for this run.[/yellow]")
             return
 
-        hunter   = EnvHunter(self.args)
-        results  = hunter.run(targets)
-        reporter = Reporter(results, hunter.stats, self.args)
-        reporter.print_summary_table()
-        reporter.print_findings()        # .env file exposures
-        reporter.print_page_findings()   # web exposures
-        reporter.print_stats()
+        hunter = EnvHunter(self.args)
+        try:
+            results  = hunter.run(targets)
+            reporter = Reporter(results, hunter.stats, self.args)
+            reporter.print_summary_table()
+            reporter.print_findings()        # .env file exposures
+            reporter.print_page_findings()   # web exposures
+            reporter.print_stats()
 
-        out_dir = self.args.output
-        Path(out_dir).mkdir(parents=True, exist_ok=True)
-        base = os.path.join(out_dir, f"scheduled_{ts}")
-        # Respect output flags — save only what the user asked for
-        if self.args.json or self.args.all_reports: reporter.save_json(base + ".json")
-        if self.args.txt  or self.args.all_reports: reporter.save_txt(base  + ".txt")
-        if self.args.html or self.args.all_reports: reporter.save_html(base + ".html")
-        # If no output flags set, default to saving all for scheduled runs
-        if not (self.args.json or self.args.txt or self.args.html or self.args.all_reports):
-            reporter.save_json(base + ".json")
-            reporter.save_txt(base  + ".txt")
-            reporter.save_html(base + ".html")
-        hunter.close()
+            out_dir = self.args.output
+            Path(out_dir).mkdir(parents=True, exist_ok=True)
+            base = os.path.join(out_dir, f"scheduled_{ts}")
+            # Respect output flags — save only what the user asked for
+            if self.args.json or self.args.all_reports: reporter.save_json(base + ".json")
+            if self.args.txt  or self.args.all_reports: reporter.save_txt(base  + ".txt")
+            if self.args.html or self.args.all_reports: reporter.save_html(base + ".html")
+            # If no output flags set, default to saving all for scheduled runs
+            if not (self.args.json or self.args.txt or self.args.html or self.args.all_reports):
+                reporter.save_json(base + ".json")
+                reporter.save_txt(base  + ".txt")
+                reporter.save_html(base + ".html")
+        except Exception as _run_err:
+            console.print(f"[red]  [!] Scheduled run error: {_run_err}[/red]")
+        finally:
+            hunter.close()  # always drain TG queue + close DB + sessions
 
     def start(self, interval_hours: float):
         console.print(Panel(
